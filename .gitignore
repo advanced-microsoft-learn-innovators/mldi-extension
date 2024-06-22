@@ -33,3 +33,6 @@ dist/
 .tsbuildinfo
 
 docs/
+
+# Edge User Data
+.EdgeUserData
