@@ -1,7 +1,7 @@
 import type { ResponseGetScrapedHtmlSummary } from "@advanced-microsoft-learn-innovators/mldi-types";
 
 export const convertJsonToResponseGetScrapedHtmlSummary = (
-  jsonRes: any
+  jsonRes: any,
 ): ResponseGetScrapedHtmlSummary => {
   // if missing any of the required fields, throw an error
   if (
@@ -13,7 +13,7 @@ export const convertJsonToResponseGetScrapedHtmlSummary = (
     !jsonRes.aoaiSectionSummaryDataIndices
   ) {
     throw new Error(
-      "Missing required fields in JSON response from NestJS server"
+      "Missing required fields in JSON response from NestJS server",
     );
   }
 
