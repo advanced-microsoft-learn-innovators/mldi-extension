@@ -1,6 +1,7 @@
 import pluginSecurity from "eslint-plugin-security";
-import babelParser from "@babel/eslint-parser";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+// import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import typescriptEslintParser from "@typescript-eslint/parser";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 const config = [
   {
@@ -9,27 +10,14 @@ const config = [
       namespace: pluginSecurity,
     },
   },
-  eslintPluginPrettierRecommended,
   {
     languageOptions: {
-      parser: babelParser,
+      parser: typescriptEslintParser,
       parserOptions: {
-        requireConfigFile: false,
-        babelOptions: {
-          babelrc: false,
-          configFile: false,
-          plugins: [
-            [
-              "@babel/plugin-proposal-decorators",
-              {
-                legacy: true,
-              },
-            ],
-            "@babel/plugin-transform-typescript",
-          ],
-        },
+        sourceType: "module",
       },
     },
   },
+  eslintConfigPrettier,
 ];
 export default config;
