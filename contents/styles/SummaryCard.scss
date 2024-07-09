@@ -1,0 +1,37 @@
+.mldi_card_base {
+  background-color: #f2f2f2;
+  border-radius: 6px;
+  flex-basis: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 16px;
+  font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
+    sans-serif;
+
+  .card_title {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+
+    .card_title_icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .card_title_text {
+      font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
+        sans-serif;
+      font-size: 16px;
+      color: #555555;
+      margin-left: 8px;
+      line-height: 100%;
+    }
+  }
+
+  .card_body {
+    font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
+      sans-serif;
+    font-size: 16px;
+    margin-top: 16px;
+  }
+}
