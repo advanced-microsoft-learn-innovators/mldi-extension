@@ -4,10 +4,14 @@
   "version": "0.1.0",
   "description": "Browser Extension for Microsoft Learning Documentation Insights (MLDI)",
   "author": "Advanced Microsoft Learn Innovators",
+  "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "lint": "eslint \"**/*.ts\" --fix",
+    "format": "prettier --write \"**/*.ts\" "
   },
   "dependencies": {
     "@advanced-microsoft-learn-innovators/mldi-types": "^0.1.0",
@@ -23,6 +27,10 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "@typescript-eslint/parser": "^7.15.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-security": "^3.0.1",
     "prettier": "3.2.4",
     "typescript": "5.3.3"
   },
