@@ -1,4 +1,4 @@
-import type { PlasmoCSConfig } from 'plasmo';
+import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { store } from '~store';
 import { setHover, setNotHover, setRect, setWord } from '~word-state';
 
@@ -28,7 +28,7 @@ const getAllContent = () => {
         if (node.innerHTML.includes(keyword)) {
           newNode.innerHTML = newNode.innerHTML.replaceAll(
             keyword,
-            `<span class='mldi-word-desc' style='color: red;'>${keyword}</span>`
+            `<span class='mldi-word-desc'>${keyword}</span>`
           );
         }
       });
@@ -38,6 +38,7 @@ const getAllContent = () => {
   const contentRect = allContent.getBoundingClientRect();
   const wordElements = document.getElementsByClassName('mldi-word-desc');
   Array.from(wordElements).forEach((element) => {
+    // Add event listeners to each word element
     element.addEventListener('mouseenter', (event) => {
       store.dispatch(setHover());
       store.dispatch(setWord({ word: element.textContent }));
@@ -71,4 +72,14 @@ const getAllContent = () => {
 
 window.addEventListener('load', () => {
   getAllContent();
+
+  // add style to .mldi-word-desc
+  const style = document.createElement('style');
+  style.textContent = `
+    .mldi-word-desc {
+      cursor: pointer;
+      border-bottom: 1px dashed gray;
+    }
+  `;
+  document.head.appendChild(style);
 });
