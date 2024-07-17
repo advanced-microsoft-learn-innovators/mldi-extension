@@ -1,7 +1,36 @@
 .mldi_word_card {
   padding: 10px;
-  background-color: aqua;
+  background-color: #f2f2f2;
   border-radius: 6px;
   width: 400px;
+  height: 150px;
   margin: 0px;
+  padding: 10px;
+  display: flex;
+  flex-flow: column;
+  filter: drop-shadow(3px 3px 2px gray);
+
+  .word {
+    font-weight: 600;
+    width: 100%;
+  }
+
+  .description {
+    margin-top: 4px;
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+
+  .tags {
+    margin-top: 4px;
+    width: 100%;
+  }
+
+  .bubble_tip {
+    width: 15px;
+    height: 10px;
+    background-color: #f2f2f2;
+    border: none;
+  }
 }
