@@ -8,7 +8,6 @@ export const WordDescriptionCard = () => {
   const rect = useSelector((state: WordState) => state.rect);
 
   const calcCardTop = () => {
-    console.log(rect);
     if (rect.cursorY < 200) {
       // if the word is at the top of the page
       if (rect.height > 40) {
@@ -40,7 +39,6 @@ export const WordDescriptionCard = () => {
 
   const calcCardLeft = () => {
     const windowWidth = window.innerWidth;
-    console.log(windowWidth);
     if (rect.cursorX + 400 > windowWidth) {
       return rect.cursorX + rect.scrollX - 400;
     }

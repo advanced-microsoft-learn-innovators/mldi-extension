@@ -37,6 +37,7 @@ const getAllContent = (keywords: Array<string>) => {
     if (node.classList.contains('heading-wrapper')) return; // Skip the heading
     // TODO: Check if URL is not rewritten.
 
+    // replace the word with a span element that has .mldi-word-desc class
     const newNode = document.createElement(node.tagName);
     newNode.innerHTML = node.innerHTML;
     newNode.className = node.className;
@@ -60,18 +61,13 @@ const getAllContent = (keywords: Array<string>) => {
       store.dispatch(setWord({ word: element.textContent }));
 
       const timeoutId = store.getState().timeoutId;
-      console.log(1);
-      console.log(timeoutId);
       if (timeoutId) {
-        console.log(2);
         clearTimeout(timeoutId);
         store.dispatch(setTimeoutId({ timeoutId: null }));
       }
-      console.log(3);
       const rect = element.getBoundingClientRect();
       const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      console.log('test');
       store.dispatch(
         setRect({
           rect: {
@@ -96,14 +92,11 @@ const getAllContent = (keywords: Array<string>) => {
       store.dispatch(setNotHover());
 
       // hide the card after 2 seconds if the mouse doesn't hover keywords
-      console.log('set timeout');
       const timeoutId = setTimeout(() => {
         if (store.getState().isHover) return;
         store.dispatch(hideCard());
-        console.log('hide');
         store.dispatch(setTimeoutId({ timeoutId: null }));
       }, 2000);
-      console.log(timeoutId);
       store.dispatch(setTimeoutId({ timeoutId: timeoutId }));
     });
   });

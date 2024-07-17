@@ -49,7 +49,6 @@ const wordStateSlice = createSlice({
       state.isHover = false;
     },
     showCard: (state) => {
-      console.log('show');
       state.isShowCard = true;
     },
     hideCard: (state) => {
@@ -60,9 +59,7 @@ const wordStateSlice = createSlice({
       state.word = word;
     },
     setRect: (state, action) => {
-      console.log('set rect');
       const { rect } = action.payload;
-      console.log(rect);
       state.rect = rect;
     },
     setTimeoutId: (state: WordState, action) => {
