@@ -6,6 +6,7 @@ export const config: PlasmoCSConfig = {
   matches: ['https://learn.microsoft.com/*']
 };
 
+// sample keywords
 const keywords = [
   'Teams',
   'チーム',
@@ -21,19 +22,23 @@ const keywords = [
 const getAllContent = () => {
   const allContent = document.getElementsByClassName('content')[0];
   Array.from(allContent.children).forEach((node) => {
-    if (node.tagName === 'P') {
-      const newNode = document.createElement('p');
-      newNode.innerHTML = node.innerHTML;
-      keywords.forEach((keyword) => {
-        if (node.innerHTML.includes(keyword)) {
-          newNode.innerHTML = newNode.innerHTML.replaceAll(
-            keyword,
-            `<span class='mldi-word-desc'>${keyword}</span>`
-          );
-        }
-      });
-      allContent.replaceChild(newNode, node);
-    }
+    if (node.tagName === 'PLASMO-CSUI') return; // Skip the Plasmo UI
+    if (node.tagName === 'H1') return; // Skip the title
+    if (node.tagName === 'NAV') return; // Skip the navigation
+    if (node.classList.contains('page-metadata-container')) return; // Skip the metadata
+    if (node.classList.contains('heading-wrapper')) return; // Skip the heading
+    // TODO: Check if URL is not rewritten.
+
+    const newNode = document.createElement(node.tagName);
+    newNode.innerHTML = node.innerHTML;
+    keywords.forEach((keyword) => {
+      if (!node.innerHTML.includes(keyword)) return;
+      newNode.innerHTML = newNode.innerHTML.replaceAll(
+        keyword,
+        `<span class='mldi-word-desc'>${keyword}</span>`
+      );
+    });
+    allContent.replaceChild(newNode, node);
   });
   const contentRect = allContent.getBoundingClientRect();
   const wordElements = document.getElementsByClassName('mldi-word-desc');
