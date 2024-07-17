@@ -19,7 +19,7 @@ const keywords = [
   'SharePoint'
 ];
 
-const getAllContent = () => {
+const getAllContent = (keywords: Array<string>) => {
   const allContent = document.getElementsByClassName('content')[0];
   Array.from(allContent.children).forEach((node) => {
     if (node.tagName === 'PLASMO-CSUI') return; // Skip the Plasmo UI
@@ -76,7 +76,7 @@ const getAllContent = () => {
 };
 
 window.addEventListener('load', () => {
-  getAllContent();
+  getAllContent(keywords);
 
   // add style to .mldi-word-desc
   const style = document.createElement('style');
