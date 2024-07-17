@@ -1,11 +1,19 @@
-import type { WordState } from '~word-state';
-import { useSelector } from 'react-redux';
+import {
+  hideCard,
+  setHover,
+  setNotHover,
+  setTimeoutId,
+  type WordState
+} from '~word-state';
+import { useDispatch, useSelector } from 'react-redux';
 
 // TODO: Too many magic numbers. Refactor this.
 export const WordDescriptionCard = () => {
   const isShowCard = useSelector((state: WordState) => state.isShowCard);
   const word = useSelector((state: WordState) => state.word);
   const rect = useSelector((state: WordState) => state.rect);
+  const timeoutId = useSelector((state: WordState) => state.timeoutId);
+  const dispatch = useDispatch();
 
   const calcCardTop = () => {
     // calculate the top position of the card
@@ -77,6 +85,23 @@ export const WordDescriptionCard = () => {
         position: 'relative',
         top: calcCardTop(),
         left: calcCardLeft()
+      }}
+      onMouseEnter={() => {
+        // store.dispatch(setHover());
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          dispatch(setTimeoutId({ timeoutId: null }));
+        }
+      }}
+      onMouseLeave={() => {
+        dispatch(setNotHover());
+
+        // hide the card after 2 seconds if the mouse doesn't hover keywords
+        const timeoutId = setTimeout(() => {
+          dispatch(hideCard());
+          dispatch(setTimeoutId({ timeoutId: null }));
+        }, 2000);
+        dispatch(setTimeoutId({ timeoutId: timeoutId }));
       }}
     >
       <div className="word">{word}</div>
