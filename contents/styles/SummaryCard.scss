@@ -1,3 +1,6 @@
+$default-font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
+  sans-serif;
+
 .mldi_card_base {
   background-color: #f2f2f2;
   border-radius: 6px;
@@ -5,8 +8,7 @@
   margin-left: 0px;
   margin-right: 0px;
   padding: 16px;
-  font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
-    sans-serif;
+  font-family: $default-font-family;
 
   .card_title {
     font-weight: 600;
@@ -19,8 +21,7 @@
     }
 
     .card_title_text {
-      font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
-        sans-serif;
+      font-family: $default-font-family;
       font-size: 16px;
       color: #555555;
       margin-left: 8px;
@@ -29,8 +30,7 @@
   }
 
   .card_body {
-    font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial,
-      sans-serif;
+    font-family: $default-font-family;
     font-size: 16px;
     margin-top: 16px;
   }
