@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export type WordState = {
   isHover: boolean;
+  isShowCard: boolean;
   word: string;
+  timeoutId: number | null;
   rect: {
     left: number;
     right: number;
@@ -22,6 +24,7 @@ const wordStateSlice = createSlice({
   name: 'wordState',
   initialState: {
     isHover: false,
+    isShowCard: false,
     word: '',
     rect: {
       left: 0,
@@ -35,7 +38,8 @@ const wordStateSlice = createSlice({
       cursorY: 0,
       contentWidth: 0,
       contentLeft: 0
-    }
+    },
+    timeoutId: null
   },
   reducers: {
     setHover: (state) => {
@@ -44,17 +48,37 @@ const wordStateSlice = createSlice({
     setNotHover: (state) => {
       state.isHover = false;
     },
+    showCard: (state) => {
+      console.log('show');
+      state.isShowCard = true;
+    },
+    hideCard: (state) => {
+      state.isShowCard = false;
+    },
     setWord: (state, action) => {
       const { word } = action.payload;
       state.word = word;
     },
     setRect: (state, action) => {
+      console.log('set rect');
       const { rect } = action.payload;
+      console.log(rect);
       state.rect = rect;
+    },
+    setTimeoutId: (state: WordState, action) => {
+      const { timeoutId } = action.payload;
+      state.timeoutId = timeoutId;
     }
   }
 });
 
-export const { setHover, setNotHover, setWord, setRect } =
-  wordStateSlice.actions;
+export const {
+  setHover,
+  setNotHover,
+  setWord,
+  setRect,
+  showCard,
+  hideCard,
+  setTimeoutId
+} = wordStateSlice.actions;
 export default wordStateSlice.reducer;

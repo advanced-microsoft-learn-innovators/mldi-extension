@@ -1,6 +1,14 @@
 import type { PlasmoCSConfig } from 'plasmo';
 import { store } from '~store';
-import { setHover, setNotHover, setRect, setWord } from '~word-state';
+import {
+  setHover,
+  setNotHover,
+  setRect,
+  setWord,
+  showCard,
+  hideCard,
+  setTimeoutId
+} from '~word-state';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://learn.microsoft.com/*']
@@ -31,6 +39,7 @@ const getAllContent = (keywords: Array<string>) => {
 
     const newNode = document.createElement(node.tagName);
     newNode.innerHTML = node.innerHTML;
+    newNode.className = node.className;
     keywords.forEach((keyword) => {
       if (!node.innerHTML.includes(keyword)) return;
       newNode.innerHTML = newNode.innerHTML.replaceAll(
@@ -47,11 +56,22 @@ const getAllContent = (keywords: Array<string>) => {
     element.addEventListener('mouseenter', (event: MouseEvent) => {
       // if the mouse enters the word, set isHover to true
       store.dispatch(setHover());
+      store.dispatch(showCard());
       store.dispatch(setWord({ word: element.textContent }));
+
+      const timeoutId = store.getState().timeoutId;
+      console.log(1);
+      console.log(timeoutId);
+      if (timeoutId) {
+        console.log(2);
+        clearTimeout(timeoutId);
+        store.dispatch(setTimeoutId({ timeoutId: null }));
+      }
+      console.log(3);
       const rect = element.getBoundingClientRect();
       const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-
+      console.log('test');
       store.dispatch(
         setRect({
           rect: {
@@ -74,6 +94,17 @@ const getAllContent = (keywords: Array<string>) => {
     element.addEventListener('mouseleave', () => {
       // if the mouse leaves the word, set isHover to false
       store.dispatch(setNotHover());
+
+      // hide the card after 2 seconds if the mouse doesn't hover keywords
+      console.log('set timeout');
+      const timeoutId = setTimeout(() => {
+        if (store.getState().isHover) return;
+        store.dispatch(hideCard());
+        console.log('hide');
+        store.dispatch(setTimeoutId({ timeoutId: null }));
+      }, 2000);
+      console.log(timeoutId);
+      store.dispatch(setTimeoutId({ timeoutId: timeoutId }));
     });
   });
 };

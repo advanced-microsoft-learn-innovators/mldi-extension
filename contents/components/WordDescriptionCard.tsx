@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 // TODO: Too many magic numbers. Refactor this.
 export const WordDescriptionCard = () => {
-  const isHover = useSelector((state: WordState) => state.isHover);
+  const isShowCard = useSelector((state: WordState) => state.isShowCard);
   const word = useSelector((state: WordState) => state.word);
   const rect = useSelector((state: WordState) => state.rect);
 
@@ -65,7 +65,7 @@ export const WordDescriptionCard = () => {
     }
   };
 
-  if (!isHover) {
+  if (!isShowCard) {
     return null;
   }
   return (
