@@ -45,6 +45,7 @@ const getAllContent = (keywords: Array<string>) => {
   Array.from(wordElements).forEach((element) => {
     // Add event listeners to each word element
     element.addEventListener('mouseenter', (event: MouseEvent) => {
+      // if the mouse enters the word, set isHover to true
       store.dispatch(setHover());
       store.dispatch(setWord({ word: element.textContent }));
       const rect = element.getBoundingClientRect();
@@ -69,7 +70,9 @@ const getAllContent = (keywords: Array<string>) => {
         })
       );
     });
+
     element.addEventListener('mouseleave', () => {
+      // if the mouse leaves the word, set isHover to false
       store.dispatch(setNotHover());
     });
   });
