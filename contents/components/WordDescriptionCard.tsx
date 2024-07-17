@@ -87,7 +87,9 @@ export const WordDescriptionCard = () => {
         left: calcCardLeft()
       }}
       onMouseEnter={() => {
-        // store.dispatch(setHover());
+        dispatch(setHover());
+
+        // if the mouse hovers the card, clear the timeout
         if (timeoutId) {
           clearTimeout(timeoutId);
           dispatch(setTimeoutId({ timeoutId: null }));
