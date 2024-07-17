@@ -6,6 +6,7 @@ import {
   type WordState
 } from '~word-state';
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 // TODO: Too many magic numbers. Refactor this.
 export const WordDescriptionCard = () => {
@@ -14,6 +15,8 @@ export const WordDescriptionCard = () => {
   const rect = useSelector((state: WordState) => state.rect);
   const timeoutId = useSelector((state: WordState) => state.timeoutId);
   const dispatch = useDispatch();
+
+  const [description, setDescription] = useState<string>('');
 
   const calcCardTop = () => {
     // calculate the top position of the card
@@ -75,9 +78,19 @@ export const WordDescriptionCard = () => {
     }
   };
 
-  if (!isShowCard) {
-    return null;
-  }
+  useEffect(() => {
+    // TODO: fetch description from the server
+    if (!isShowCard) {
+      setDescription(null);
+      return;
+    }
+    setDescription(
+      word +
+        'This is a description of the word.In the heart of the bustling city, there stood an ancient library that had withstood the test of time. This library, with its towering shelves and dusty tomes, was a sanctuary for those who sought knowledge and solace. The walls were adorned with portraits of scholars and philosophers, their eyes seemingly following the visitors as they wandered through the labyrinth of books. Each corner of the library held a story, each book a portal to a different world.One rainy afternoon, a young woman named Emily found herself drawn to this haven of wisdom. She had always been a voracious reader, her curiosity insatiable. As she stepped inside, the scent of aged paper and ink enveloped her, a comforting reminder of the countless hours she had spent lost in the pages of her favorite novels. Emily wandered aimlessly, her fingers grazing the spines of books, until she stumbled upon a hidden alcove.'
+    );
+  }, [isShowCard, word]);
+
+  if (!isShowCard) return null;
   return (
     <div
       className="mldi_word_card"
@@ -107,7 +120,7 @@ export const WordDescriptionCard = () => {
       }}
     >
       <div className="word">{word}</div>
-      <div className="description">This is a word description card</div>
+      <div className="description">{description}</div>
       <div className="tags">#Microsoft365 #Skype</div>
       <div
         className="bubble_tip"
