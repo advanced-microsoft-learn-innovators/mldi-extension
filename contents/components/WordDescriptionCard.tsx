@@ -8,6 +8,7 @@ export const WordDescriptionCard = () => {
   const rect = useSelector((state: WordState) => state.rect);
 
   const calcCardTop = () => {
+    // calculate the top position of the card
     if (rect.cursorY < 200) {
       // if the word is at the top of the page
       if (rect.height > 40) {
@@ -38,6 +39,7 @@ export const WordDescriptionCard = () => {
   };
 
   const calcCardLeft = () => {
+    // calculate the left position of the card
     const windowWidth = window.innerWidth;
     if (rect.cursorX + 400 > windowWidth) {
       return rect.cursorX + rect.scrollX - 400;
@@ -46,6 +48,7 @@ export const WordDescriptionCard = () => {
   };
 
   const calcTipTop = () => {
+    // calculate the top position of the bubble_tip
     if (rect.cursorY < 200) {
       // if the word is at the top of the page
       return -9;
@@ -55,6 +58,7 @@ export const WordDescriptionCard = () => {
   };
 
   const calcTipLeft = () => {
+    // calculate the left position of the bubble_tip
     const windowWidth = window.innerWidth;
     if (rect.cursorX + 400 > windowWidth) {
       return 400 * 0.98;
