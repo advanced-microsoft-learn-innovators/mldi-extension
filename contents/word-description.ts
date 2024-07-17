@@ -1,4 +1,4 @@
-import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
+import type { PlasmoCSConfig } from 'plasmo';
 import { store } from '~store';
 import { setHover, setNotHover, setRect, setWord } from '~word-state';
 
@@ -39,7 +39,7 @@ const getAllContent = () => {
   const wordElements = document.getElementsByClassName('mldi-word-desc');
   Array.from(wordElements).forEach((element) => {
     // Add event listeners to each word element
-    element.addEventListener('mouseenter', (event) => {
+    element.addEventListener('mouseenter', (event: MouseEvent) => {
       store.dispatch(setHover());
       store.dispatch(setWord({ word: element.textContent }));
       const rect = element.getBoundingClientRect();
