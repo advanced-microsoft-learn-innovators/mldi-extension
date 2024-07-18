@@ -1,19 +1,13 @@
-import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo";
-import type { SwResponse } from "@advanced-microsoft-learn-innovators/mldi-types";
+import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from 'plasmo';
+import type { SwResponse } from '@advanced-microsoft-learn-innovators/mldi-types';
 
-/**
- * Plasmo configuration for the content script.
- */
 export const config: PlasmoCSConfig = {
-  matches: ["https://learn.microsoft.com/*"],
+  matches: ['https://learn.microsoft.com/*']
 };
 
-/**
- * Get the inline anchor for the Plasmo inline.
- */
 export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
-  element: document.getElementsByTagName("h1")[0],
-  position: "afterend",
+  element: document.getElementsByTagName('h1')[0],
+  position: 'afterend'
 });
 
 /**
@@ -22,18 +16,18 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
  */
 const getSenderTabId = (callback: (tabId: number) => void) => {
   chrome.runtime.sendMessage(
-    { requestType: "getSenderTabId" },
+    { requestType: 'getSenderTabId' },
     (response: SwResponse) => {
-      if (response.isSuccess && response.type === "tabId") {
+      if (response.isSuccess && response.type === 'tabId') {
         callback(response.tabId);
-      } else if (response.isSuccess && response.type !== "tabId") {
+      } else if (response.isSuccess && response.type !== 'tabId') {
         //error
-        console.error("Invalid response type");
+        console.error('Invalid response type');
       } else {
         // error
         console.error(response);
       }
-    },
+    }
   );
 };
 
@@ -46,26 +40,26 @@ const getSenderTabId = (callback: (tabId: number) => void) => {
 const getApiRes = (
   callback: (apiResponse: any) => void,
   currentUrl: string,
-  senderTabId: number,
+  senderTabId: number
 ) => {
   // send message to background SW to call Rest API
   chrome.runtime.sendMessage(
     {
-      requestType: "callRESTApiNestJS",
+      requestType: 'callRESTApiNestJS',
       currentUrl: currentUrl,
-      senderTabId: senderTabId,
+      senderTabId: senderTabId
     },
     (response: SwResponse) => {
-      if (response.isSuccess && response.type === "apiRes") {
+      if (response.isSuccess && response.type === 'apiRes') {
         callback(response.apiResponse);
-      } else if (response.isSuccess && response.type !== "apiRes") {
+      } else if (response.isSuccess && response.type !== 'apiRes') {
         // error
-        console.error("Invalid response type");
+        console.error('Invalid response type');
       } else {
         // error
         console.error(response);
       }
-    },
+    }
   );
 };
 
@@ -83,7 +77,7 @@ const PlasmoInline = () => {
           console.log(apiResponse);
         },
         currentUrl,
-        senderTabId,
+        senderTabId
       );
     });
   };
@@ -93,7 +87,7 @@ const PlasmoInline = () => {
       style={{
         borderRadius: 4,
         padding: 4,
-        background: "pink",
+        background: 'pink'
       }}
     >
       <button onClick={handleClick}>Toggle REST API via background SW</button>
