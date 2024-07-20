@@ -9,6 +9,8 @@ import type {
   SwSuccessResponseTabId
 } from '@advanced-microsoft-learn-innovators/mldi-types';
 
+import sendWordDescriptionCard from './contextMenus/word-description';
+
 /**
  * Background script (service worker) for the extension.
  * To handle messaging between the extension and the content script, use Chrome Messaging API.
@@ -75,3 +77,20 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+// add contextMenu
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'word-description',
+    title: '単語の解説を表示する',
+    contexts: ['selection']
+  });
+});
+
+// add contextMenu clicked action
+chrome.contextMenus.onClicked.addListener(async (info) => {
+  if (info.menuItemId === 'word-description') {
+    sendWordDescriptionCard(info);
+  }
+  return true;
+});
