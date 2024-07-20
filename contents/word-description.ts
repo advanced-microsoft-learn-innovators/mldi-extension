@@ -7,7 +7,8 @@ import {
   setWord,
   showCard,
   hideCard,
-  setTimeoutId
+  setTimeoutId,
+  setDiscription
 } from '~word-state';
 
 export const config: PlasmoCSConfig = {
@@ -117,5 +118,46 @@ window.addEventListener('load', () => {
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log(request);
+    if (request.type !== 'contextMenus') return;
+    if (request.command !== 'word-description') return;
+
+    store.dispatch(setWord({ word: request.message.word }));
+    store.dispatch(
+      setDiscription({ description: request.message.description })
+    );
+    store.dispatch(showCard());
+    console.log(2);
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+
+    const allContent = document.getElementsByClassName('content')[0];
+    const contentRect = allContent.getBoundingClientRect();
+
+    const timeoutId = store.getState().timeoutId;
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      store.dispatch(setTimeoutId({ timeoutId: null }));
+    }
+    const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    store.dispatch(
+      setRect({
+        rect: {
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          width: rect.width,
+          height: rect.height,
+          scrollX: scrollX,
+          scrollY: scrollY,
+          cursorX: rect.x + rect.width / 2,
+          cursorY: rect.y,
+          contentWidth: contentRect.width,
+          contentLeft: contentRect.left
+        }
+      })
+    );
   });
 });

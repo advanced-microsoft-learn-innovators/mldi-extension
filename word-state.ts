@@ -4,6 +4,7 @@ export type WordState = {
   isHover: boolean;
   isShowCard: boolean;
   word: string;
+  description: string;
   timeoutId: number | null;
   rect: {
     left: number;
@@ -26,6 +27,7 @@ const wordStateSlice = createSlice({
     isHover: false,
     isShowCard: false,
     word: '',
+    description: '',
     rect: {
       left: 0,
       top: 0,
@@ -58,6 +60,10 @@ const wordStateSlice = createSlice({
       const { word } = action.payload;
       state.word = word;
     },
+    setDiscription: (state, action) => {
+      const { description } = action.payload;
+      state.description = description;
+    },
     setRect: (state, action) => {
       const { rect } = action.payload;
       state.rect = rect;
@@ -73,6 +79,7 @@ export const {
   setHover,
   setNotHover,
   setWord,
+  setDiscription,
   setRect,
   showCard,
   hideCard,
