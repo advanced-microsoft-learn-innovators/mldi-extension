@@ -27,11 +27,7 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const PlasmoInline = () => {
-  return (
-    <Provider store={store}>
-      <WordDescriptionCard />;
-    </Provider>
-  );
+  return <WordDescriptionCard />;
 };
 
 export default PlasmoInline;

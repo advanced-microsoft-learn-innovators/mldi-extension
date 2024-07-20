@@ -1,15 +1,4 @@
 import type { PlasmoCSConfig } from 'plasmo';
-import { store } from '~store';
-import {
-  setHover,
-  setNotHover,
-  setRect,
-  setWord,
-  showCard,
-  hideCard,
-  setTimeoutId,
-  setDiscription
-} from '~word-state';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://learn.microsoft.com/*']
@@ -56,49 +45,61 @@ const getAllContent = (keywords: Array<string>) => {
   Array.from(wordElements).forEach((element) => {
     // Add event listeners to each word element
     element.addEventListener('mouseenter', (event: MouseEvent) => {
-      // if the mouse enters the word, set isHover to true
-      store.dispatch(setHover());
-      store.dispatch(showCard());
-      store.dispatch(setWord({ word: element.textContent }));
-
-      const timeoutId = store.getState().timeoutId;
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        store.dispatch(setTimeoutId({ timeoutId: null }));
-      }
-      const rect = element.getBoundingClientRect();
+      // when the mouse enters the keyword,
+      // 1. get position of the word.
+      const clientRect = element.getBoundingClientRect();
       const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      store.dispatch(
-        setRect({
-          rect: {
-            left: rect.left,
-            top: rect.top,
-            right: rect.right,
-            width: rect.width,
-            height: rect.height,
-            scrollX: scrollX,
-            scrollY: scrollY,
-            cursorX: event.clientX,
-            cursorY: event.clientY,
-            contentWidth: contentRect.width,
-            contentLeft: contentRect.left
-          }
-        })
-      );
+      const rect = {
+        left: clientRect.left,
+        top: clientRect.top,
+        right: clientRect.right,
+        width: clientRect.width,
+        height: clientRect.height,
+        scrollX: scrollX,
+        scrollY: scrollY,
+        cursorX: event.clientX,
+        cursorY: event.clientY,
+        contentWidth: contentRect.width,
+        contentLeft: contentRect.left
+      };
+
+      // 2. show the card and the word (selected text)
+      chrome.runtime.sendMessage({
+        type: 'relay',
+        command: 'showCard',
+        data: {
+          word: element.textContent,
+          rect: rect
+        }
+      });
+
+      // 3. fetch description of the word and show description
+      chrome.runtime.sendMessage({
+        type: 'api',
+        command: 'fetchWordDescription',
+        data: {
+          word: element.textContent
+        }
+      });
+
+      // 4. if timeoutId is exist, clear the timeout
+      chrome.runtime.sendMessage({
+        type: 'relay',
+        command: 'deleteTimeout'
+      });
     });
 
     element.addEventListener('mouseleave', () => {
-      // if the mouse leaves the word, set isHover to false
-      store.dispatch(setNotHover());
-
-      // hide the card after 2 seconds if the mouse doesn't hover keywords
-      const timeoutId = setTimeout(() => {
-        if (store.getState().isHover) return;
-        store.dispatch(hideCard());
-        store.dispatch(setTimeoutId({ timeoutId: null }));
-      }, 2000);
-      store.dispatch(setTimeoutId({ timeoutId: timeoutId }));
+      // if the mouse leaves the word
+      // hide the card after 2 seconds
+      chrome.runtime.sendMessage({
+        type: 'relay',
+        command: 'setTimeout',
+        data: {
+          time: 2000
+        }
+      });
     });
   });
 };
@@ -117,34 +118,22 @@ window.addEventListener('load', () => {
   document.head.appendChild(style);
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(request);
     if (request.type !== 'contextMenus') return;
-    if (request.command !== 'word-description') return;
+    switch (request.command) {
+      case 'get-rect':
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
 
-    store.dispatch(setWord({ word: request.message.word }));
-    store.dispatch(
-      setDiscription({ description: request.message.description })
-    );
-    store.dispatch(showCard());
-    console.log(2);
-    const selection = window.getSelection();
-    const range = selection.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
+        const allContent = document.getElementsByClassName('content')[0];
+        const contentRect = allContent.getBoundingClientRect();
 
-    const allContent = document.getElementsByClassName('content')[0];
-    const contentRect = allContent.getBoundingClientRect();
+        const scrollX =
+          window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollY =
+          window.pageYOffset || document.documentElement.scrollTop;
 
-    const timeoutId = store.getState().timeoutId;
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      store.dispatch(setTimeoutId({ timeoutId: null }));
-    }
-    const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-
-    store.dispatch(
-      setRect({
-        rect: {
+        sendResponse({
           left: rect.left,
           top: rect.top,
           right: rect.right,
@@ -156,8 +145,7 @@ window.addEventListener('load', () => {
           cursorY: rect.y,
           contentWidth: contentRect.width,
           contentLeft: contentRect.left
-        }
-      })
-    );
+        });
+    }
   });
 });

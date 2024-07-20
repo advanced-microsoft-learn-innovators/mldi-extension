@@ -1,22 +1,86 @@
-import {
-  hideCard,
-  setHover,
-  setNotHover,
-  setTimeoutId,
-  type WordState
-} from '~word-state';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import type { Message } from '~types';
 
 // TODO: Too many magic numbers. Refactor this.
 export const WordDescriptionCard = () => {
-  const isShowCard = useSelector((state: WordState) => state.isShowCard);
-  const word = useSelector((state: WordState) => state.word);
-  const description = useSelector((state: WordState) => state.description);
-  const rect = useSelector((state: WordState) => state.rect);
-  const timeoutId = useSelector((state: WordState) => state.timeoutId);
-  const dispatch = useDispatch();
+  const [isShowCard, setIsShowCard] = useState(false);
+  const [word, setWord] = useState(null);
+  const [description, setDiscription] = useState(null);
+  const [rect, setRect] = useState(null);
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener(
+      (message: Message, sender, sendResponse) => {
+        console.log('word description card: ' + message.command);
+        switch (message.command) {
+          case 'showCard':
+            setWord(message.data.word);
+            setRect(message.data.rect);
+            setIsShowCard(true);
+            return;
+          case 'hideCard':
+            hideCard();
+            return;
+          case 'addDescription':
+            setDiscription(message.data.description);
+            return;
+          case 'setTimeout':
+            setTimeoutToHideCard(message.data.time);
+            return;
+          case 'deleteTimeout':
+            console.log(timeoutId);
+            deleteTimeoutToHideCard();
+            return;
+          default:
+            console.log('do not have listener of command: ' + message.command);
+            return;
+        }
+      }
+    );
+  }, []);
+
+  const hideCard = () => {
+    setWord('');
+    setDiscription('');
+    setRect(null);
+    setIsShowCard(false);
+    setTimeoutId(null);
+  };
+
+  const setTimeoutToHideCard = (time: number) => {
+    console.log('[DEBUG] setTimeoutToHideCard');
+    const _timeoutId = setTimeout(() => {
+      hideCard();
+    }, time);
+    setTimeoutId(_timeoutId);
+  };
+
+  const deleteTimeoutToHideCard = () => {
+    // TODO: There may be more efficient way to clear the timeout.
+    // When the 'deleteTimeout' message is sent, the timeoutId is always null, because this function is called before the timeout is set.
+    console.log('[DEBUG] deleteTimeoutToHideCard');
+    console.log(timeoutId);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+      console.log('timeout cleared');
+    } else {
+      const lastTimeoutId = setTimeout(() => {
+        for (let i = 0; i < (lastTimeoutId as unknown as number); i++) {
+          clearTimeout(i);
+        }
+      }, 0);
+      console.log('timeout cleared');
+    }
+  };
+
+  useEffect(() => {
+    console.log(`timeoutId: ${timeoutId}`);
+  }, [timeoutId]);
 
   const calcCardTop = () => {
+    if (!rect) return;
     // calculate the top position of the card
     if (rect.cursorY < 200) {
       // if the word is at the top of the page
@@ -48,6 +112,7 @@ export const WordDescriptionCard = () => {
   };
 
   const calcCardLeft = () => {
+    if (!rect) return;
     // calculate the left position of the card
     console.log(rect);
     const windowWidth = window.innerWidth;
@@ -58,6 +123,7 @@ export const WordDescriptionCard = () => {
   };
 
   const calcTipTop = () => {
+    if (!rect) return;
     // calculate the top position of the bubble_tip
     if (rect.cursorY < 200) {
       // if the word is at the top of the page
@@ -68,6 +134,7 @@ export const WordDescriptionCard = () => {
   };
 
   const calcTipLeft = () => {
+    if (!rect) return;
     // calculate the left position of the bubble_tip
     const windowWidth = window.innerWidth;
     if (rect.cursorX + 400 > windowWidth) {
@@ -87,23 +154,14 @@ export const WordDescriptionCard = () => {
         left: calcCardLeft()
       }}
       onMouseEnter={() => {
-        dispatch(setHover());
-
         // if the mouse hovers the card, clear the timeout
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-          dispatch(setTimeoutId({ timeoutId: null }));
-        }
+        console.log('onMouseEnter');
+        deleteTimeoutToHideCard();
       }}
       onMouseLeave={() => {
-        dispatch(setNotHover());
-
-        // hide the card after 2 seconds if the mouse doesn't hover keywords
-        const timeoutId = setTimeout(() => {
-          dispatch(hideCard());
-          dispatch(setTimeoutId({ timeoutId: null }));
-        }, 2000);
-        dispatch(setTimeoutId({ timeoutId: timeoutId }));
+        // hide the card after 2 seconds if the mouse doesn't hover this card
+        console.log('onMounseLeave');
+        setTimeoutToHideCard(2000);
       }}
     >
       <div className="word">{word}</div>
