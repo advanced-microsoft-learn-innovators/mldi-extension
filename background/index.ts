@@ -8,6 +8,7 @@ import type {
   SwSuccessResponseApiRes,
   SwSuccessResponseTabId
 } from '@advanced-microsoft-learn-innovators/mldi-types';
+import { showWordDescriptionCard } from './contextMenus/word-description';
 
 /**
  * Background script (service worker) for the extension.
@@ -75,3 +76,18 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+// add contextMenu
+chrome.contextMenus.create({
+  id: 'word-description',
+  title: '単語の解説を表示する',
+  contexts: ['selection']
+});
+
+// add contextMenu clicked action
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'word-description') {
+    showWordDescriptionCard(info);
+  }
+  return true;
+});
