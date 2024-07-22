@@ -76,6 +76,18 @@ const addHoverActionToKeywords = (allContent: Element) => {
         command: 'deleteTimeout'
       });
     });
+
+    element.addEventListener('mouseleave', () => {
+      // when the mouse leaves the keyword,
+      // hide the card in 2000ms
+      chrome.runtime.sendMessage({
+        type: 'relay',
+        command: 'setTimeout',
+        data: {
+          time: 2000
+        }
+      });
+    });
   });
 };
 
