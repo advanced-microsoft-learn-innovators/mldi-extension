@@ -6,7 +6,7 @@ import { WordDescriptionCard } from './components/WordDescriptionCard';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 // REASON: plasmo need to write "data-text" to import style sheet
-import wordCardStyle from 'data-text:./styles/WordDiscriptionCard.scss';
+import wordCardStyle from 'data-text:./styles/WordDescriptionCard.scss';
 
 /**
  * Plasmo configuration for the content script.
