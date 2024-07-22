@@ -6,6 +6,7 @@ export const WordDescriptionCard = () => {
   const [isShowCard, setIsShowCard] = useState(false);
   const [word, setWord] = useState(null);
   const [description, setDescription] = useState(null);
+  const [tags, setTags] = useState([]);
   const [rect, setRect] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
 
@@ -39,21 +40,21 @@ export const WordDescriptionCard = () => {
   }, []);
 
   const fetchDescription = async (word: string) => {
-    const wordDescription = (
-      await chrome.runtime.sendMessage({
-        type: 'api',
-        command: 'fetchWordDescription',
-        data: {
-          word: word
-        }
-      })
-    ).description;
-    setDescription(wordDescription);
+    const response = await chrome.runtime.sendMessage({
+      type: 'api',
+      command: 'fetchWordDescription',
+      data: {
+        word: word
+      }
+    });
+    setDescription(response.description);
+    setTags(response.tags);
   };
 
   const hideCard = () => {
     setWord('');
     setDescription('');
+    setTags([]);
     setRect(null);
     setIsShowCard(false);
     setTimeoutId(null);
@@ -165,7 +166,13 @@ export const WordDescriptionCard = () => {
     >
       <div className="word">{word}</div>
       <div className="description">{description}</div>
-      <div className="tags">#Microsoft365 #Skype</div>
+      <div className="tags">
+        {tags.map((tag, index) => (
+          <span key={index} className="tag">
+            #{tag}&nbsp;
+          </span>
+        ))}
+      </div>
       <div
         className="bubble_tip"
         style={{
