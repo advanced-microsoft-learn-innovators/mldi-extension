@@ -36,13 +36,17 @@ const overallSummary = () => {
   const [abstract, setAbstract] = useState('');
 
   useEffect(() => {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type !== 'response') return;
+      if (message.command !== 'fetchSummary') return;
+      setAbstract(message.data.summary);
+    });
     (async () => {
-      const response = await chrome.runtime.sendMessage({
+      await chrome.runtime.sendMessage({
         type: 'api',
         command: 'fetchSummary',
         data: { url: window.location.href }
       });
-      setAbstract(response.summary);
     })();
   }, []);
 

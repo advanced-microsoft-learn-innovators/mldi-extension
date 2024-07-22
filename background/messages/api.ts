@@ -41,16 +41,22 @@ const handleApi = (
             'related-topics': 'This is a summary of related-topics'
           }
         };
-        sendResponse(response.aoaiOutputJson);
         const [tab] = await chrome.tabs.query({
           active: true,
           lastFocusedWindow: true
         });
         await chrome.tabs.sendMessage(tab.id, {
-          type: 'api',
+          type: 'response',
           command: 'fetchSectionSummary',
           data: {
             sectionSummaries: response.aoaiOutputJsonHeadingById
+          }
+        });
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'response',
+          command: 'fetchSummary',
+          data: {
+            summary: response.aoaiOutputJson.summary
           }
         });
       })();
