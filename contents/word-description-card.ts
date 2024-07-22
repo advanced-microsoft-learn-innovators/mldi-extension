@@ -70,26 +70,7 @@ const addHoverActionToKeywords = (allContent: Element) => {
         }
       });
 
-      // 3. fetch description of the word and show description
-      (async () => {
-        const wordDescription = await chrome.runtime.sendMessage({
-          type: 'api',
-          command: 'fetchWordDescription',
-          data: {
-            word: element.textContent
-          }
-        });
-
-        await chrome.runtime.sendMessage({
-          type: 'relay',
-          command: 'addDescription',
-          data: {
-            description: wordDescription.word
-          }
-        });
-      })();
-
-      // 4. if timeoutId is exist, clear the timeout
+      // 3. if timeoutId is exist, clear the timeout
       chrome.runtime.sendMessage({
         type: 'relay',
         command: 'deleteTimeout'
