@@ -8,8 +8,8 @@ const handleApi = (
   sendResponse: (response?: any) => void
 ) => {
   switch (message.command) {
-    case 'getWordList':
-      // get word list from the storage
+    case 'fetchWordList':
+      // fetch word list from the storage
       (async () => {
         const url = message.data.url;
         // const response: AxiosResponse = await axios.get(

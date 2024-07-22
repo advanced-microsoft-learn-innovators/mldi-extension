@@ -14,7 +14,7 @@ const fetchKeywordsAndAddClassToAllKeywords = () => {
     const keywords: Array<string> = (
       await chrome.runtime.sendMessage({
         type: 'api',
-        command: 'getWordList',
+        command: 'fetchWordList',
         data: {
           url: window.location.href
         }
