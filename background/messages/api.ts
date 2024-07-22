@@ -36,7 +36,7 @@ const handleApi = (
           status: 200
         };
         sendResponse({
-          word: response.data
+          description: response.data
         });
       })();
       return;
