@@ -8,6 +8,29 @@ const handleApi = (
   sendResponse: (response?: any) => void
 ) => {
   switch (message.command) {
+    case 'fetchSummary':
+      // fetch summary
+      (async () => {
+        const url = message.data.url;
+        // const response: AxiosResponse = await axios.get(
+        //   `http://localhost:3000/scraped-contents`,
+        //   {
+        //     params: {
+        //       url: url,
+        //       isSummary: true,
+        //       aoaiSummaryHeadingsLevel: [false, false, false],
+        //       isTermDefinition: false
+        //     }
+        //   }
+        // );
+        const response = {
+          aoaiOutputJson: {
+            summary: 'This is a summary.',
+            keywords: ['keyword1', 'keyword2']
+          }
+        };
+        sendResponse(response.aoaiOutputJson);
+      })();
     case 'fetchWordList':
       // fetch word list
       (async () => {
