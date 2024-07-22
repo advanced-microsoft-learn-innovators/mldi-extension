@@ -23,13 +23,21 @@ export const showWordDescriptionCard = (info) => {
     });
 
     // 3. fetch description of the word
+    const response = await chrome.runtime.sendMessage({
+      type: 'api',
+      command: 'getWordList',
+      data: {
+        word: selectedText
+      }
+    });
+
     // const response: AxiosResponse = await axios.get(
     //   `http://localhost:3000/word-description/${selectedText}`
     // );
-    const response = {
-      data: `I cannot describe ${selectedText}.`,
-      status: 200
-    };
+    // const response = {
+    //   data: `I cannot describe ${selectedText}.`,
+    //   status: 200
+    // };
 
     // 4. show the description
     await chrome.tabs.sendMessage(tab.id, {

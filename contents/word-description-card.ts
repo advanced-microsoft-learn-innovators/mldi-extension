@@ -36,6 +36,60 @@ const fetchKeywordsAndAddClassToAllKeywords = () => {
   });
 };
 
+const addHoverActionToKeywords = () => {
+  const contentRect = document
+    .getElementsByClassName('content')[0]
+    .getBoundingClientRect();
+  const keywordElements = document.getElementsByClassName('mldi-word-desc');
+  Array.from(keywordElements).forEach((element: Element) => {
+    element.addEventListener('mouseenter', (event: MouseEvent) => {
+      // when the mouse enters the keyword,
+      // 1. get position of the word.
+      const clientRect = element.getBoundingClientRect();
+      const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const rect = {
+        left: clientRect.left,
+        top: clientRect.top,
+        right: clientRect.right,
+        width: clientRect.width,
+        height: clientRect.height,
+        scrollX: scrollX,
+        scrollY: scrollY,
+        cursorX: event.clientX,
+        cursorY: event.clientY,
+        contentWidth: contentRect.width,
+        contentLeft: contentRect.left
+      };
+
+      // 2. show the card and the word (selected text)
+      chrome.runtime.sendMessage({
+        type: 'relay',
+        command: 'showCard',
+        data: {
+          word: element.textContent,
+          rect: rect
+        }
+      });
+
+      // 3. fetch description of the word and show description
+      chrome.runtime.sendMessage({
+        type: 'api',
+        command: 'fetchWordDescription',
+        data: {
+          word: element.textContent
+        }
+      });
+
+      // 4. if timeoutId is exist, clear the timeout
+      chrome.runtime.sendMessage({
+        type: 'relay',
+        command: 'deleteTimeout'
+      });
+    });
+  });
+};
+
 window.addEventListener('load', () => {
   // fetch keywords and add the class to all the keywords
   fetchKeywordsAndAddClassToAllKeywords();
