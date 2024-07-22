@@ -1,3 +1,5 @@
+@import 'variables';
+
 .mldi_word_card {
   padding: 10px;
   background-color: #f2f2f2;
@@ -11,11 +13,13 @@
   filter: drop-shadow(3px 3px 2px gray);
 
   .word {
+    font-family: $default-font-family;
     font-weight: 600;
     width: 100%;
   }
 
   .description {
+    font-family: $default-font-family;
     margin-top: 4px;
     flex: 1;
     width: 100%;
@@ -23,6 +27,7 @@
   }
 
   .tags {
+    font-family: $default-font-family;
     margin-top: 4px;
     width: 100%;
   }
