@@ -5,7 +5,7 @@ import type { Message } from '~types';
 export const WordDescriptionCard = () => {
   const [isShowCard, setIsShowCard] = useState(false);
   const [word, setWord] = useState(null);
-  const [description, setDiscription] = useState(null);
+  const [description, setDescription] = useState(null);
   const [rect, setRect] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
 
@@ -48,12 +48,12 @@ export const WordDescriptionCard = () => {
         }
       })
     ).description;
-    setDiscription(wordDescription);
+    setDescription(wordDescription);
   };
 
   const hideCard = () => {
     setWord('');
-    setDiscription('');
+    setDescription('');
     setRect(null);
     setIsShowCard(false);
     setTimeoutId(null);
