@@ -50,7 +50,7 @@ window.addEventListener('load', () => {
   document.head.appendChild(style);
 
   // add message listener
-  // MEMO:
+  // MEMO: Maybe addLisnter could be a separate file?
   chrome.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
       switch (message.command) {
