@@ -22,7 +22,6 @@ const handleApi = (
         });
       })();
       return;
-
     case 'fetchWordDescription':
       // fetch description of the word
       (async () => {
@@ -36,7 +35,7 @@ const handleApi = (
           status: 200
         };
         sendResponse({
-          word: response.data
+          description: response.data
         });
       })();
       return;

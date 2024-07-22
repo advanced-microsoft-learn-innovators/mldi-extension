@@ -14,15 +14,15 @@ export const WordDescriptionCard = () => {
       (message: Message, sender, sendResponse) => {
         switch (message.command) {
           case 'showCard':
-            setWord(message.data.word);
-            setRect(message.data.rect);
-            setIsShowCard(true);
+            (async () => {
+              setWord(message.data.word);
+              setRect(message.data.rect);
+              setIsShowCard(true);
+              await fetchDescription(message.data.word);
+            })();
             return;
           case 'hideCard':
             hideCard();
-            return;
-          case 'addDescription':
-            setDiscription(message.data.description);
             return;
           case 'setTimeout':
             setTimeoutToHideCard(message.data.time);
@@ -37,6 +37,19 @@ export const WordDescriptionCard = () => {
       }
     );
   }, []);
+
+  const fetchDescription = async (word: string) => {
+    const wordDescription = (
+      await chrome.runtime.sendMessage({
+        type: 'api',
+        command: 'fetchDescription',
+        data: {
+          word: word
+        }
+      })
+    ).description;
+    setDiscription(wordDescription);
+  };
 
   const hideCard = () => {
     setWord('');

@@ -22,25 +22,7 @@ export const showWordDescriptionCard = (info) => {
       }
     });
 
-    // 3. fetch description of the word
-    const response = await chrome.runtime.sendMessage({
-      type: 'api',
-      command: 'fetchWordList',
-      data: {
-        word: selectedText
-      }
-    });
-
-    // 4. show the description
-    await chrome.tabs.sendMessage(tab.id, {
-      type: 'contextMenus',
-      command: 'addDescription',
-      data: {
-        description: response.data
-      }
-    });
-
-    // 5. set timeout to hide card, 5000ms
+    // 3. set timeout to hide card, 5000ms
     await chrome.tabs.sendMessage(tab.id, {
       type: 'contextMenus',
       command: 'setTimeout',
