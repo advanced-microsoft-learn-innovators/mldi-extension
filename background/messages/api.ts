@@ -18,7 +18,7 @@ const handleApi = (
         //     params: {
         //       url: url,
         //       isSummary: true,
-        //       aoaiSummaryHeadingsLevel: [false, false, false],
+        //       aoaiSummaryHeadingsLevel: [false, true, false],
         //       isTermDefinition: false
         //     }
         //   }
@@ -27,8 +27,34 @@ const handleApi = (
           aoaiOutputJson: {
             summary: 'This is a summary.',
             keywords: ['keyword1', 'keyword2']
+          },
+          aoaiOutputJsonHeadingById: {
+            'guest-invitation-process':
+              'This is a summary of guest-invitation-process',
+            'set-up-guest-access': 'This is a summary of set-up-guest-access',
+            'licensing-for-guest-access':
+              'This is a summary of licensing-for-guest-access',
+            'diagnosing-issues-with-guest-access':
+              'This is a summary of diagnosing-issues-with-guest-access',
+            'tracking-guests-in-your-organization':
+              'This is a summary of tracking-guests-in-your-organization',
+            'related-topics': 'This is a summary of related-topics'
           }
         };
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          lastFocusedWindow: true
+        });
+
+        Object.keys(response.aoaiOutputJsonHeadingById).forEach((key) => {
+          chrome.tabs.sendMessage(tab.id, {
+            type: 'api',
+            command: `fetchSectionSummary-${key}`,
+            data: {
+              summary: response.aoaiOutputJsonHeadingById[key]
+            }
+          });
+        });
         sendResponse(response.aoaiOutputJson);
       })();
     case 'fetchWordList':

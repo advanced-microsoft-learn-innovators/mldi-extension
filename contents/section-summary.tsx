@@ -44,10 +44,13 @@ const sectionSummary = ({ anchor }) => {
   const [abstract, setAbstract] = useState('');
 
   useEffect(() => {
-    setAbstract(
-      anchor.element.id +
-        `: これが${anchor.element.innerText}の要約内容です。できれば 100 字以内で収めたいところ。ああああああああ Teams あああああああああああああああああああああ`
-    );
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      console.log(`Received message: ${anchor.element.id} ${message.command}`);
+      if (message.type !== 'api') return;
+      if (message.command !== `fetchSectionSummary-${anchor.element.id}`)
+        return;
+      setAbstract(message.data.summary);
+    });
   }, []);
 
   return <SummaryCard title="段落要約" body={abstract} />;
