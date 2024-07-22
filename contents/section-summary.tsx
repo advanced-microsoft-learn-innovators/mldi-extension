@@ -45,7 +45,6 @@ const sectionSummary = ({ anchor }) => {
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log(`Received message: ${anchor.element.id} ${message.command}`);
       if (message.type !== 'api') return;
       if (message.command !== `fetchSectionSummary-${anchor.element.id}`)
         return;
