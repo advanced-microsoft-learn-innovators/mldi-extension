@@ -8,7 +8,7 @@ const handleApi = (
   sendResponse: (response?: any) => void
 ) => {
   switch (message.command) {
-    case 'getWordList':
+    case 'fetchWordList':
       // fetch word list
       (async () => {
         const url = message.data.url;
