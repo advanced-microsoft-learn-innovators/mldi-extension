@@ -12,7 +12,6 @@ export const WordDescriptionCard = () => {
   useEffect(() => {
     chrome.runtime.onMessage.addListener(
       (message: Message, sender, sendResponse) => {
-        console.log('word description card: ' + message.command);
         switch (message.command) {
           case 'showCard':
             setWord(message.data.word);
@@ -29,7 +28,6 @@ export const WordDescriptionCard = () => {
             setTimeoutToHideCard(message.data.time);
             return;
           case 'deleteTimeout':
-            console.log(timeoutId);
             deleteTimeoutToHideCard();
             return;
           default:
@@ -49,7 +47,6 @@ export const WordDescriptionCard = () => {
   };
 
   const setTimeoutToHideCard = (time: number) => {
-    console.log('[DEBUG] setTimeoutToHideCard');
     const _timeoutId = setTimeout(() => {
       hideCard();
     }, time);
@@ -59,25 +56,17 @@ export const WordDescriptionCard = () => {
   const deleteTimeoutToHideCard = () => {
     // TODO: There may be more efficient way to clear the timeout.
     // When the 'deleteTimeout' message is sent, the timeoutId is always null, because this function is called before the timeout is set.
-    console.log('[DEBUG] deleteTimeoutToHideCard');
-    console.log(timeoutId);
     if (timeoutId) {
       clearTimeout(timeoutId);
       setTimeoutId(null);
-      console.log('timeout cleared');
     } else {
       const lastTimeoutId = setTimeout(() => {
         for (let i = 0; i < (lastTimeoutId as unknown as number); i++) {
           clearTimeout(i);
         }
       }, 0);
-      console.log('timeout cleared');
     }
   };
-
-  useEffect(() => {
-    console.log(`timeoutId: ${timeoutId}`);
-  }, [timeoutId]);
 
   const calcCardTop = () => {
     if (!rect) return;
@@ -114,7 +103,6 @@ export const WordDescriptionCard = () => {
   const calcCardLeft = () => {
     if (!rect) return;
     // calculate the left position of the card
-    console.log(rect);
     const windowWidth = window.innerWidth;
     if (rect.cursorX + 400 > windowWidth) {
       return rect.cursorX + rect.scrollX - 400;
@@ -155,12 +143,10 @@ export const WordDescriptionCard = () => {
       }}
       onMouseEnter={() => {
         // if the mouse hovers the card, clear the timeout
-        console.log('onMouseEnter');
         deleteTimeoutToHideCard();
       }}
       onMouseLeave={() => {
         // hide the card after 2 seconds if the mouse doesn't hover this card
-        console.log('onMounseLeave');
         setTimeoutToHideCard(2000);
       }}
     >

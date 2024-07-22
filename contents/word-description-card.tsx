@@ -15,9 +15,6 @@ export const config: PlasmoCSConfig = {
   matches: ['https://learn.microsoft.com/*']
 };
 
-// export const getOverlayAnchor: PlasmoGetOverlayAnchor = () =>
-//   document.querySelector('.content') as HTMLElement;
-
 export const getStyle: PlasmoGetStyle = () => {
   const style = document.createElement('style');
   style.textContent += wordCardStyle;
