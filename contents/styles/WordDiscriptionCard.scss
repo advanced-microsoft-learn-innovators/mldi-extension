@@ -11,6 +11,7 @@
   display: flex;
   flex-flow: column;
   filter: drop-shadow(3px 3px 2px gray);
+  z-index: 1001;
 
   .word {
     font-family: $default-font-family;
