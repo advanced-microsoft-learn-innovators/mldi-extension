@@ -36,9 +36,14 @@ const overallSummary = () => {
   const [abstract, setAbstract] = useState('');
 
   useEffect(() => {
-    setAbstract(
-      'これが要約内容です。できれば 150 字以内で収めたいところ。ああああああああ Teams あああああああああああああああああああああ'
-    );
+    (async () => {
+      const response = await chrome.runtime.sendMessage({
+        type: 'api',
+        command: 'fetchSummary',
+        data: { url: window.location.href }
+      });
+      setAbstract(response.summary);
+    })();
   }, []);
 
   return <SummaryCard title="要約" body={abstract} />;
