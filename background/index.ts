@@ -11,6 +11,7 @@ import type {
 import { showWordDescriptionCard } from './contextMenus/word-description';
 import type { Message } from '~types';
 import handleApi from './messages/api';
+import handleRelay from './messages/relay';
 
 /**
  * Background script (service worker) for the extension.
@@ -102,6 +103,7 @@ chrome.runtime.onMessage.addListener(
         handleApi(message, sender, sendResponse);
         return;
       case 'relay':
+        handleRelay(message);
         return;
       case 'contextMenu':
         return;
