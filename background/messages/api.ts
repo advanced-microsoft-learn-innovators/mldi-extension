@@ -36,18 +36,6 @@ const handleApi = (
           description: response.data
         });
       })();
-    case 'getWordList':
-      // get word list from the storage
-      (async () => {
-        const url = message.data.url;
-        // const response: AxiosResponse = await axios.get(
-        //   `http://localhost:3000/word-description/${url}`
-        // );
-        const response = ['Teams', 'Entra', 'チーム', 'チャネル', '多要素認証'];
-        sendResponse({
-          wordList: response
-        });
-      })();
       return;
     default:
       return;
