@@ -42,7 +42,7 @@ export const WordDescriptionCard = () => {
     const wordDescription = (
       await chrome.runtime.sendMessage({
         type: 'api',
-        command: 'fetchDescription',
+        command: 'fetchWordDescription',
         data: {
           word: word
         }
