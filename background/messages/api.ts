@@ -15,12 +15,12 @@ const handleApi = (
         // const response: AxiosResponse = await axios.get(
         //   `http://localhost:3000/word-description/${url}`
         // );
+        console.log(`fetchWordList: ${url}`);
         const response = ['Teams', 'Entra', 'チーム', 'チャネル', '多要素認証'];
         sendResponse({
           wordList: response
         });
       })();
-
       return;
 
     case 'fetchWordDescription':
@@ -30,6 +30,7 @@ const handleApi = (
         // const response: AxiosResponse = await axios.get(
         //   `http://localhost:3000/word-description/${word}`
         // );
+        console.log(`fetchWordDescription: ${word}`);
         const response = {
           data: `I cannot describe ${word}.`,
           status: 200

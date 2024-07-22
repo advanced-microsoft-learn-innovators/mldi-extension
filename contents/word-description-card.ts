@@ -1,7 +1,17 @@
 import type { Message } from '~types';
 
-const fetchKeywordsAndAddClassToAllKeywords = () => {
+const fetchKeywordsAndAddClassToAllKeywords = async () => {
   const allContent = document.getElementsByClassName('content')[0];
+  // get the word list using api
+  const keywords: Array<string> = (
+    await chrome.runtime.sendMessage({
+      type: 'api',
+      command: 'fetchWordList',
+      data: {
+        url: window.location.href
+      }
+    })
+  ).wordList;
   Array.from(allContent.children).forEach(async (node) => {
     if (node.tagName === 'PLASMO-CSUI') return; // Skip the Plasmo UI
     if (node.tagName === 'H1') return; // Skip the title
@@ -9,17 +19,6 @@ const fetchKeywordsAndAddClassToAllKeywords = () => {
     if (node.classList.contains('page-metadata-container')) return; // Skip the metadata
     if (node.classList.contains('heading-wrapper')) return; // Skip the heading
     // TODO: Check if URL is not rewritten.
-
-    // get the word list using api
-    const keywords: Array<string> = (
-      await chrome.runtime.sendMessage({
-        type: 'api',
-        command: 'fetchWordList',
-        data: {
-          url: window.location.href
-        }
-      })
-    ).wordList;
 
     // replace the word with a span element that has .mldi-word-desc class
     const newNode = document.createElement(node.tagName);
@@ -34,12 +33,11 @@ const fetchKeywordsAndAddClassToAllKeywords = () => {
     });
     allContent.replaceChild(newNode, node);
   });
+  addHoverActionToKeywords(allContent);
 };
 
-const addHoverActionToKeywords = () => {
-  const contentRect = document
-    .getElementsByClassName('content')[0]
-    .getBoundingClientRect();
+const addHoverActionToKeywords = (allContent: Element) => {
+  const contentRect = allContent.getBoundingClientRect();
   const keywordElements = document.getElementsByClassName('mldi-word-desc');
   Array.from(keywordElements).forEach((element: Element) => {
     element.addEventListener('mouseenter', (event: MouseEvent) => {
@@ -73,13 +71,23 @@ const addHoverActionToKeywords = () => {
       });
 
       // 3. fetch description of the word and show description
-      chrome.runtime.sendMessage({
-        type: 'api',
-        command: 'fetchWordDescription',
-        data: {
-          word: element.textContent
-        }
-      });
+      (async () => {
+        const wordDescription = await chrome.runtime.sendMessage({
+          type: 'api',
+          command: 'fetchWordDescription',
+          data: {
+            word: element.textContent
+          }
+        });
+
+        await chrome.runtime.sendMessage({
+          type: 'relay',
+          command: 'addDescription',
+          data: {
+            description: wordDescription.word
+          }
+        });
+      })();
 
       // 4. if timeoutId is exist, clear the timeout
       chrome.runtime.sendMessage({
@@ -90,9 +98,9 @@ const addHoverActionToKeywords = () => {
   });
 };
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   // fetch keywords and add the class to all the keywords
-  fetchKeywordsAndAddClassToAllKeywords();
+  await fetchKeywordsAndAddClassToAllKeywords();
 
   // add underline to .mldi-word-desc
   const style = document.createElement('style');
