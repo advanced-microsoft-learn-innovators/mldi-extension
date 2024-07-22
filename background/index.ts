@@ -9,6 +9,8 @@ import type {
   SwSuccessResponseTabId
 } from '@advanced-microsoft-learn-innovators/mldi-types';
 import { showWordDescriptionCard } from './contextMenus/word-description';
+import type { Message } from '~types';
+import handleApi from './messages/api';
 
 /**
  * Background script (service worker) for the extension.
@@ -91,3 +93,20 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
   return true;
 });
+
+// add message listener
+chrome.runtime.onMessage.addListener(
+  (message: Message, sender, sendResponse) => {
+    switch (message.type) {
+      case 'api':
+        handleApi(message, sender, sendResponse);
+        return;
+      case 'relay':
+        return;
+      case 'contextMenu':
+        return;
+      default:
+        return;
+    }
+  }
+);
