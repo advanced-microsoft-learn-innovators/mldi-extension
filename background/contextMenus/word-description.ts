@@ -22,7 +22,7 @@ export const showWordDescriptionCard = (info) => {
       }
     });
 
-    // 3. set timeout to hide card, 5000ms
+    // 5. set timeout to hide card, 5000ms
     await chrome.tabs.sendMessage(tab.id, {
       type: 'contextMenus',
       command: 'setTimeout',

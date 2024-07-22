@@ -39,6 +39,23 @@ const handleApi = (
         });
       })();
       return;
+
+    case 'fetchWordDescription':
+      // fetch description of the word
+      (async () => {
+        const word = message.data.word;
+        // const response: AxiosResponse = await axios.get(
+        //   `http://localhost:3000/word-description/${word}`
+        // );
+        const response = {
+          data: `I cannot describe ${word}.`,
+          status: 200
+        };
+        sendResponse({
+          word: response.data
+        });
+      })();
+      return;
     default:
       return;
   }
