@@ -46,9 +46,8 @@ const sectionSummary = ({ anchor }) => {
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'api') return;
-      if (message.command !== `fetchSectionSummary-${anchor.element.id}`)
-        return;
-      setAbstract(message.data.summary);
+      if (message.command !== 'fetchSectionSummary') return;
+      setAbstract(message.data.sectionSummaries[anchor.element.id]);
     });
   }, []);
 

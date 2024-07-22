@@ -41,21 +41,18 @@ const handleApi = (
             'related-topics': 'This is a summary of related-topics'
           }
         };
+        sendResponse(response.aoaiOutputJson);
         const [tab] = await chrome.tabs.query({
           active: true,
           lastFocusedWindow: true
         });
-
-        Object.keys(response.aoaiOutputJsonHeadingById).forEach((key) => {
-          chrome.tabs.sendMessage(tab.id, {
-            type: 'api',
-            command: `fetchSectionSummary-${key}`,
-            data: {
-              summary: response.aoaiOutputJsonHeadingById[key]
-            }
-          });
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'api',
+          command: 'fetchSectionSummary',
+          data: {
+            sectionSummaries: response.aoaiOutputJsonHeadingById
+          }
         });
-        sendResponse(response.aoaiOutputJson);
       })();
     case 'fetchWordList':
       // fetch word list
