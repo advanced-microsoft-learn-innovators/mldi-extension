@@ -1,5 +1,3 @@
-import type { AxiosResponse } from 'axios';
-import axios from 'axios';
 import type { Message } from '~types';
 
 const handleApi = (
@@ -12,10 +10,6 @@ const handleApi = (
       // fetch description of the word
       (async () => {
         const word = message.data.word;
-        // const response: AxiosResponse = await axios.get(
-        //   `http://localhost:3000/word-description/${word}`
-        // );
-        console.log(`fetchWordDescription: ${word}`);
         const response = {
           data: `I cannot describe ${word}.`,
           status: 200
