@@ -1,0 +1,42 @@
+@import 'variables';
+
+.mldi_word_card {
+  padding: 10px;
+  background-color: $base-color;
+  border-radius: 6px;
+  width: 400px;
+  height: 150px;
+  margin: 0px;
+  padding: 10px;
+  display: flex;
+  flex-flow: column;
+  filter: drop-shadow(3px 3px 2px gray);
+  z-index: 1001;
+
+  .word {
+    font-family: $default-font-family;
+    font-weight: 600;
+    width: 100%;
+  }
+
+  .description {
+    font-family: $default-font-family;
+    margin-top: 4px;
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+
+  .tags {
+    font-family: $default-font-family;
+    margin-top: 4px;
+    width: 100%;
+  }
+
+  .bubble_tip {
+    width: 15px;
+    height: 10px;
+    background-color: $base-color;
+    border: none;
+  }
+}
