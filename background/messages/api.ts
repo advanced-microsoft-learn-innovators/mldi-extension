@@ -6,6 +6,18 @@ const handleApi = (
   sendResponse: (response?: any) => void
 ) => {
   switch (message.command) {
+    case 'fetchWordList':
+      // fetch word list from the storage
+      (async () => {
+        const url = message.data.url;
+        // const response: AxiosResponse = await axios.get(
+        //   `http://localhost:3000/word-description/${url}`
+        // );
+        const response = ['Teams', 'Entra', 'チーム', 'チャネル', '多要素認証'];
+        sendResponse({
+          wordList: response
+        });
+      })();
     case 'fetchWordDescription':
       // fetch description of the word
       (async () => {
