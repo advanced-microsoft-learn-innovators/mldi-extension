@@ -98,7 +98,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 // add message listener
 chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendResponse) => {
-    console.log(`background: ${message.type}-${message.command}`);
+    console.log(`[DEBUG] background: ${message.type}:${message.command}`);
     switch (message.type) {
       case 'api':
         handleApi(message, sender, sendResponse);

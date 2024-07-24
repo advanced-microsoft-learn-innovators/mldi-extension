@@ -31,7 +31,6 @@ export const WordDescriptionCard = () => {
             deleteTimeoutToHideCard();
             return;
           default:
-            console.log('do not have listener of command: ' + message.command);
             return;
         }
       }
