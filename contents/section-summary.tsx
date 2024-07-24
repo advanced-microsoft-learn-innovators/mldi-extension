@@ -41,17 +41,17 @@ export const getStyle: PlasmoGetStyle = () => {
  * @returns
  */
 const sectionSummary = ({ anchor }) => {
-  const [abstract, setAbstract] = useState('');
+  const [summary, setSummary] = useState('');
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSectionSummary') return;
-      setAbstract(message.data.sectionSummaries[anchor.element.id]);
+      setSummary(message.data.sectionSummaries[anchor.element.id]);
     });
   }, []);
 
-  return <SummaryCard title="段落要約" body={abstract} />;
+  return <SummaryCard title="段落要約" body={summary} />;
 };
 
 export default sectionSummary;

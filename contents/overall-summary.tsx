@@ -33,13 +33,13 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const overallSummary = () => {
-  const [abstract, setAbstract] = useState('');
+  const [summary, setSummary] = useState('');
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSummary') return;
-      setAbstract(message.data.summary);
+      setSummary(message.data.summary);
     });
     (async () => {
       await chrome.runtime.sendMessage({
@@ -50,7 +50,7 @@ const overallSummary = () => {
     })();
   }, []);
 
-  return <SummaryCard title="要約" body={abstract} />;
+  return <SummaryCard title="要約" body={summary} />;
 };
 
 export default overallSummary;
