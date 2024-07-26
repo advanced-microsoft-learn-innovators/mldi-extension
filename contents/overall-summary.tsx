@@ -33,15 +33,24 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const overallSummary = () => {
-  const [abstract, setAbstract] = useState('');
+  const [summary, setSummary] = useState('');
 
   useEffect(() => {
-    setAbstract(
-      'これが要約内容です。できれば 150 字以内で収めたいところ。ああああああああ Teams あああああああああああああああああああああ'
-    );
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type !== 'response') return;
+      if (message.command !== 'fetchSummary') return;
+      setSummary(message.data.summary);
+    });
+    (async () => {
+      await chrome.runtime.sendMessage({
+        type: 'api',
+        command: 'fetchSummary',
+        data: { url: window.location.href }
+      });
+    })();
   }, []);
 
-  return <SummaryCard title="要約" body={abstract} />;
+  return <SummaryCard title="要約" body={summary} />;
 };
 
 export default overallSummary;

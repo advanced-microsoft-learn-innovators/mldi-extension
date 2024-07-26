@@ -41,16 +41,17 @@ export const getStyle: PlasmoGetStyle = () => {
  * @returns
  */
 const sectionSummary = ({ anchor }) => {
-  const [abstract, setAbstract] = useState('');
+  const [summary, setSummary] = useState('');
 
   useEffect(() => {
-    setAbstract(
-      anchor.element.id +
-        `: これが${anchor.element.innerText}の要約内容です。できれば 100 字以内で収めたいところ。ああああああああ Teams あああああああああああああああああああああ`
-    );
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type !== 'response') return;
+      if (message.command !== 'fetchSectionSummary') return;
+      setSummary(message.data.sectionSummaries[anchor.element.id]);
+    });
   }, []);
 
-  return <SummaryCard title="段落要約" body={abstract} />;
+  return <SummaryCard title="段落要約" body={summary} />;
 };
 
 export default sectionSummary;

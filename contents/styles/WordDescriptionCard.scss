@@ -31,6 +31,10 @@
     font-family: $default-font-family;
     margin-top: 4px;
     width: 100%;
+
+    .tag {
+      font-family: $default-font-family;
+    }
   }
 
   .bubble_tip {
