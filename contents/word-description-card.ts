@@ -1,4 +1,4 @@
-import type { Message } from '~types';
+import type { Message } from 'types';
 
 const fetchKeywordsAndAddClassToAllKeywords = async () => {
   const allContent = document.getElementsByClassName('content')[0];
