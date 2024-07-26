@@ -87,6 +87,7 @@ const handleApi = (
           },
           status: 200
         };
+        await sleep(1000);
         sendResponse({
           description: response.data.description,
           tags: response.data.tags

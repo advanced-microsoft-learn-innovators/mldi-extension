@@ -17,6 +17,7 @@ export const WordDescriptionCard = () => {
         switch (message.command) {
           case 'showCard':
             (async () => {
+              setIsLoading(true);
               setWord(message.data.word);
               setRect(message.data.rect);
               setIsShowCard(true);
@@ -49,6 +50,7 @@ export const WordDescriptionCard = () => {
     });
     setDescription(response.description);
     setTags(response.tags);
+    setIsLoading(false);
   };
 
   const hideCard = () => {
