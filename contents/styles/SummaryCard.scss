@@ -33,6 +33,42 @@
     font-size: 16px;
     margin-top: 16px;
   }
+
+  .card_loading {
+    $loading-height: 5em;
+
+    margin-top: 16px;
+    background-color: $loading-color;
+    height: $loading-height;
+    overflow: hidden;
+    border-radius: 6px;
+    position: relative;
+
+    @keyframes loading {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      height: $loading-height;
+      width: 100%;
+      background-color: white;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.5),
+        transparent
+      );
+      position: absolute;
+      animation: loading 2s linear infinite;
+    }
+  }
 }
 
 #plasmo-shadow-container {
