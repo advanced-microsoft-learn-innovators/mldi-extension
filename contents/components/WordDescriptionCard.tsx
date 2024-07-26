@@ -9,6 +9,7 @@ export const WordDescriptionCard = () => {
   const [tags, setTags] = useState([]);
   const [rect, setRect] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener(
@@ -164,13 +165,19 @@ export const WordDescriptionCard = () => {
       }}
     >
       <div className="word">{word}</div>
-      <div className="description">{description}</div>
+      <div className="description">
+        {isLoading ? <div className="loading" /> : description}
+      </div>
       <div className="tags">
-        {tags.map((tag, index) => (
-          <span key={index} className="tag">
-            #{tag}&nbsp;
-          </span>
-        ))}
+        {isLoading ? (
+          <div className="loading" />
+        ) : (
+          tags.map((tag, index) => (
+            <span key={index} className="tag">
+              #{tag}&nbsp;
+            </span>
+          ))
+        )}
       </div>
       <div
         className="bubble_tip"
