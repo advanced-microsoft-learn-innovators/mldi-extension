@@ -82,11 +82,15 @@ const handleApi = (
         //   `http://localhost:3000/word-description/${word}`
         // );
         const response = {
-          data: `I cannot describe ${word}.`,
+          data: {
+            description: `I cannot describe ${word}.`,
+            tags: ['Teams', 'Microsoft365']
+          },
           status: 200
         };
         sendResponse({
-          description: response.data
+          description: response.data.description,
+          tags: response.data.tags
         });
       })();
       return;
