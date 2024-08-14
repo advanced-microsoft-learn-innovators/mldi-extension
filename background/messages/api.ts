@@ -1,4 +1,5 @@
 import type { Message } from '~types';
+import { sleep } from '~utils';
 
 const handleApi = (
   message: Message,
@@ -39,6 +40,9 @@ const handleApi = (
             'related-topics': 'This is a summary of related-topics'
           }
         };
+
+        await sleep(10000);
+
         const [tab] = await chrome.tabs.query({
           active: true,
           lastFocusedWindow: true
@@ -83,6 +87,7 @@ const handleApi = (
           },
           status: 200
         };
+        await sleep(1000);
         sendResponse({
           description: response.data.description,
           tags: response.data.tags

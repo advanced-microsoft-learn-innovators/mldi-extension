@@ -13,7 +13,11 @@ export const SummaryCard = ({
         <img className="card_title_icon" src={aoaiIcon} alt="AOAI" />
         <div className="card_title_text">{title}</div>
       </div>
-      <div className="card_body">{body}</div>
+      {body !== '' ? (
+        <div className="card_body">{body}</div>
+      ) : (
+        <div className="card_loading" />
+      )}
     </div>
   );
 };
