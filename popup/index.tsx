@@ -59,11 +59,18 @@ function IndexPopup() {
             <span style={configKey}>要約を表示する</span>
             <ToggleSwitch />
           </div>
-          <div style={configItem}>
-            <span style={configKey}>表示する要約レベル</span>
-          </div>
-          <div style={configItem}>
+          <div style={{ marginTop: '10px' }}>
             <span style={configKey}>要約に使用する使用するプロンプト</span>
+            <textarea
+              style={{
+                width: '100%',
+                borderColor: '#E0E0E0',
+                lineHeight: '1em',
+                height: '5em',
+                resize: 'vertical',
+                borderRadius: '5px'
+              }}
+            />
           </div>
         </div>
       </div>
