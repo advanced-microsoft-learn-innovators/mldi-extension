@@ -1,11 +1,72 @@
-import { useState } from "react";
+import type { PlasmoGetStyle } from 'plasmo';
+import React from 'react';
+import ToggleSwitch from './components/ToggleSwitch';
 
 function IndexPopup() {
-  const [data, setData] = useState("");
+  const configSection: React.CSSProperties = {
+    borderBottom: '1px solid #E0E0E0',
+    paddingBottom: '20px',
+    marginTop: '20px',
+    marginBottom: '20px'
+  };
+  const configTitle: React.CSSProperties = {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    marginBottom: '20px'
+  };
+  const configItem: React.CSSProperties = {
+    marginTop: '10px',
+    display: 'flex',
+    justifyContent: 'space-between'
+  };
+  const configKey: React.CSSProperties = {
+    fontSize: '16px'
+  };
 
   return (
-    <div>
-      <h1>This is test</h1>
+    <div
+      style={{
+        width: 400
+      }}
+    >
+      <h1
+        style={{
+          paddingLeft: '20px',
+          paddingBottom: '10px',
+          borderBottom: '1px solid #E0E0E0',
+          fontSize: '24px',
+          fontWeight: 'bold'
+        }}
+      >
+        設定
+      </h1>
+      <div
+        style={{
+          paddingLeft: '20px',
+          paddingRight: '20px'
+        }}
+      >
+        <div style={configSection}>
+          <h2 style={configTitle}>単語の説明</h2>
+          <div style={configItem}>
+            <span style={configKey}>説明を表示する</span>
+            <ToggleSwitch />
+          </div>
+        </div>
+        <div style={configSection}>
+          <h2 style={configTitle}>要約の表示</h2>
+          <div style={configItem}>
+            <span style={configKey}>要約を表示する</span>
+            <ToggleSwitch />
+          </div>
+          <div style={configItem}>
+            <span style={configKey}>表示する要約レベル</span>
+          </div>
+          <div style={configItem}>
+            <span style={configKey}>要約に使用する使用するプロンプト</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
