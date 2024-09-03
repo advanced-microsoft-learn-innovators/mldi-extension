@@ -113,3 +113,6 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+// create storage
+export const storage = new Storage();
