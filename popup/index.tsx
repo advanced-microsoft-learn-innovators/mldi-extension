@@ -1,8 +1,20 @@
 import type { PlasmoGetStyle } from 'plasmo';
 import React from 'react';
 import ToggleSwitch from './components/ToggleSwitch';
+import { storage } from '~background';
 
 function IndexPopup() {
+  const textareaRef = React.useRef(null);
+
+  React.useEffect(() => {
+    (async () => {
+      const summaryPrompt = await storage.get('summaryPrompt');
+      if (textareaRef.current) {
+        textareaRef.current.value = summaryPrompt;
+      }
+    })();
+  }, []);
+
   const configSection: React.CSSProperties = {
     borderBottom: '1px solid #E0E0E0',
     paddingBottom: '20px',
@@ -62,6 +74,7 @@ function IndexPopup() {
           <div style={{ marginTop: '10px' }}>
             <span style={configKey}>要約に使用する使用するプロンプト</span>
             <textarea
+              ref={textareaRef}
               style={{
                 width: '100%',
                 borderColor: '#E0E0E0',
@@ -69,6 +82,9 @@ function IndexPopup() {
                 height: '5em',
                 resize: 'vertical',
                 borderRadius: '5px'
+              }}
+              onChange={(e) => {
+                storage.set('summaryPrompt', e.target.value);
               }}
             />
           </div>
