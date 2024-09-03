@@ -6,6 +6,7 @@ import type {
 import { useEffect, useState } from 'react';
 import { SummaryCard } from './components/SummaryCard';
 import summaryCardStyle from 'data-text:./styles/SummaryCard.scss';
+import { useStorage } from '@plasmohq/storage/hook';
 
 /**
  * Plasmo configuration for the content script.
@@ -42,6 +43,7 @@ export const getStyle: PlasmoGetStyle = () => {
  */
 const sectionSummary = ({ anchor }) => {
   const [summary, setSummary] = useState('');
+  const [isShowSummary] = useStorage<boolean>('showSummary');
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -51,7 +53,8 @@ const sectionSummary = ({ anchor }) => {
     });
   }, []);
 
-  return <SummaryCard title="段落要約" body={summary} />;
+  if (isShowSummary) return <SummaryCard title="段落要約" body={summary} />;
+  return null;
 };
 
 export default sectionSummary;
