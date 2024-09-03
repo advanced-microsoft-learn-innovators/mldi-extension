@@ -2,6 +2,7 @@ import React from 'react';
 import ToggleSwitch from './components/ToggleSwitch';
 import { storage } from '~background';
 import { HeadingCheckBoxGroup } from './components/HeadingCheckBoxGroup';
+import { storage } from '~background';
 
 function IndexPopup() {
   const textareaRef = React.useRef(null);
