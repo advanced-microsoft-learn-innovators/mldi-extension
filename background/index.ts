@@ -12,6 +12,7 @@ import { showWordDescriptionCard } from './contextMenus/word-description';
 import type { Message } from '~types';
 import handleApi from './messages/api';
 import handleRelay from './messages/relay';
+import { Storage } from '@plasmohq/storage';
 
 /**
  * Background script (service worker) for the extension.

@@ -50,14 +50,14 @@ function IndexPopup() {
           <h2 style={configTitle}>単語の説明</h2>
           <div style={configItem}>
             <span style={configKey}>説明を表示する</span>
-            <ToggleSwitch />
+            <ToggleSwitch storageKey="showDescription" />
           </div>
         </div>
         <div style={configSection}>
           <h2 style={configTitle}>要約の表示</h2>
           <div style={configItem}>
             <span style={configKey}>要約を表示する</span>
-            <ToggleSwitch />
+            <ToggleSwitch storageKey="showSummary" />
           </div>
           <div style={{ marginTop: '10px' }}>
             <span style={configKey}>要約に使用する使用するプロンプト</span>

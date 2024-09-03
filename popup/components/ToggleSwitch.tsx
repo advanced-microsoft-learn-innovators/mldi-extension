@@ -1,7 +1,18 @@
-import React, { type ChangeEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import { storage } from '~background';
 
-const ToggleSwitch = () => {
+const ToggleSwitch = (params: { storageKey: string }) => {
+  const checkboxRef = React.useRef(null);
+  React.useEffect(() => {
+    (async () => {
+      const isChecked = await storage.get(params.storageKey);
+      if (checkboxRef.current) {
+        checkboxRef.current.checked = isChecked;
+      }
+    })();
+  }, []);
+
   const Canvas = styled.label`
     display: flex;
     align-items: center;
@@ -46,7 +57,16 @@ const ToggleSwitch = () => {
 
   return (
     <Canvas>
-      <Input type="checkbox" />
+      <Input
+        type="checkbox"
+        ref={checkboxRef}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          (async () => {
+            await storage.set(params.storageKey, isChecked);
+          })();
+        }}
+      />
       <Switch />
     </Canvas>
   );
