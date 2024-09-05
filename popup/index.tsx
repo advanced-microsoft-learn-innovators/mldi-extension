@@ -1,19 +1,10 @@
 import React from 'react';
 import ToggleSwitch from './components/ToggleSwitch';
 import { HeadingCheckBoxGroup } from './components/HeadingCheckBoxGroup';
-import { storage } from '~background';
 
 function IndexPopup() {
   const textareaRef = React.useRef(null);
-
-  React.useEffect(() => {
-    (async () => {
-      const summaryPrompt = await storage.get('summaryPrompt');
-      if (textareaRef.current) {
-        textareaRef.current.value = summaryPrompt;
-      }
-    })();
-  }, []);
+  const [summaryPrompt, setSummaryPrompt] = React.useState('');
 
   const configSection: React.CSSProperties = {
     borderBottom: '1px solid #E0E0E0',
@@ -79,6 +70,7 @@ function IndexPopup() {
             <span style={configKey}>要約に使用する使用するプロンプト</span>
             <textarea
               ref={textareaRef}
+              value={summaryPrompt}
               style={{
                 width: '100%',
                 borderColor: '#E0E0E0',
@@ -88,7 +80,7 @@ function IndexPopup() {
                 borderRadius: '5px'
               }}
               onChange={(e) => {
-                storage.set('summaryPrompt', e.target.value);
+                setSummaryPrompt(e.target.value);
               }}
             />
           </div>
