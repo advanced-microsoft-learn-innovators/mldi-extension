@@ -38,6 +38,7 @@ const overallSummary = () => {
   const [isShowSummary] = useStorage<boolean>('showSummary');
 
   useEffect(() => {
+    if (!isShowSummary) return;
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSummary') return;
@@ -50,7 +51,7 @@ const overallSummary = () => {
         data: { url: window.location.href }
       });
     })();
-  }, []);
+  }, [isShowSummary]);
 
   if (isShowSummary) return <SummaryCard title="要約" body={summary} />;
   return null;

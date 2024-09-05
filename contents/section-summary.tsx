@@ -46,12 +46,13 @@ const sectionSummary = ({ anchor }) => {
   const [isShowSummary] = useStorage<boolean>('showSummary');
 
   useEffect(() => {
+    if (!isShowSummary) return;
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSectionSummary') return;
       setSummary(message.data.sectionSummaries[anchor.element.id]);
     });
-  }, []);
+  }, [isShowSummary]);
 
   if (isShowSummary) return <SummaryCard title="段落要約" body={summary} />;
   return null;
