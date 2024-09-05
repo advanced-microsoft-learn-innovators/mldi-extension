@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { storage } from '~background';
 
+// Intentionally not using useStorage for toggle animation.
+// If useStorage is used, the rendering is happened and skip the animation.
+// If you want to use useStorage, you may need to create "SAVE" button.
 const ToggleSwitch = (params: { storageKey: string }) => {
   const checkboxRef = React.useRef(null);
   React.useEffect(() => {
