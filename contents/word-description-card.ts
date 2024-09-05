@@ -1,4 +1,5 @@
 import type { Message } from 'types';
+import { storage } from '~background';
 
 const fetchKeywordsAndAddClassToAllKeywords = async () => {
   const allContent = document.getElementsByClassName('content')[0];
@@ -92,6 +93,14 @@ const addHoverActionToKeywords = (allContent: Element) => {
 };
 
 window.addEventListener('load', async () => {
+  // get is show description
+  const isShowDescription = await chrome.runtime.sendMessage({
+    type: 'api',
+    command: 'getIsShowDescription'
+  });
+  console.log(isShowDescription);
+  if (!isShowDescription) return;
+
   // fetch keywords and add the class to all the keywords
   await fetchKeywordsAndAddClassToAllKeywords();
 
