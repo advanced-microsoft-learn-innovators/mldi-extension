@@ -96,7 +96,7 @@ const handleApi = (
       return;
     case 'getIsShowDescription':
       (async () => {
-        const isShowDescription = await storage.get('showDescription');
+        const isShowDescription = await storage.get('isShowDescription');
         sendResponse(isShowDescription);
       })();
       return;

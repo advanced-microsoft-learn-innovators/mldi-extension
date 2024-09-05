@@ -43,7 +43,7 @@ export const getStyle: PlasmoGetStyle = () => {
  */
 const sectionSummary = ({ anchor }) => {
   const [summary, setSummary] = useState('');
-  const [isShowSummary] = useStorage<boolean>('showSummary');
+  const [isShowSummary] = useStorage<boolean>('isShowSummary');
 
   useEffect(() => {
     if (!isShowSummary) return;
