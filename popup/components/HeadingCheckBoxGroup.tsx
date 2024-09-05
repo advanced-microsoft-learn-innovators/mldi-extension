@@ -1,24 +1,13 @@
 import React from 'react';
 import { HeadingCheckBox } from './HeadingCheckBox';
-import { storage } from '~background';
+import { useStorage } from '@plasmohq/storage/hook';
 
 export const HeadingCheckBoxGroup = () => {
-  const [isSummaryHeadeingLevels, setIsSummaryHeadeingLevels] = React.useState({
-    h2: false,
-    h3: false,
-    h4: false
-  });
-  React.useEffect(() => {
-    (async () => {
-      const isSummaryHeadeingLevels:
-        | { h2: boolean; h3: boolean; h4: boolean }
-        | undefined = await storage.get('isSummaryHeadeingLevels');
-      if (isSummaryHeadeingLevels) {
-        console.log('isSummaryHeadeingLevels', isSummaryHeadeingLevels);
-        setIsSummaryHeadeingLevels(isSummaryHeadeingLevels);
-      }
-    })();
-  }, []);
+  const [isSummaryHeadeingLevels, setIsSummaryHeadeingLevels] = useStorage<{
+    h2: boolean;
+    h3: boolean;
+    h4: boolean;
+  }>('isSummaryHeadeingLevels', { h2: false, h3: false, h4: false });
 
   return (
     <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -33,10 +22,7 @@ export const HeadingCheckBoxGroup = () => {
               const newIsSummaryHeadeingLevels = isSummaryHeadeingLevels;
               newIsSummaryHeadeingLevels[headingLevel as 'h2' | 'h3' | 'h4'] =
                 isShowSummary;
-              await storage.set(
-                'isSummaryHeadeingLevels',
-                newIsSummaryHeadeingLevels
-              );
+              setIsSummaryHeadeingLevels(newIsSummaryHeadeingLevels);
             }}
           />
         </div>
