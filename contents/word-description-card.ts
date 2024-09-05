@@ -1,5 +1,4 @@
 import type { Message } from 'types';
-import { storage } from '~background';
 
 const fetchKeywordsAndAddClassToAllKeywords = async () => {
   const allContent = document.getElementsByClassName('content')[0];
