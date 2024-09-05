@@ -1,6 +1,6 @@
-import type { PlasmoGetStyle } from 'plasmo';
 import React from 'react';
 import ToggleSwitch from './components/ToggleSwitch';
+import { HeadingCheckBoxGroup } from './components/HeadingCheckBoxGroup';
 
 function IndexPopup() {
   const configSection: React.CSSProperties = {
@@ -58,6 +58,10 @@ function IndexPopup() {
           <div style={configItem}>
             <span style={configKey}>要約を表示する</span>
             <ToggleSwitch />
+          </div>
+          <div style={configItem}>
+            <span style={configKey}>要約する段落レベル</span>
+            <HeadingCheckBoxGroup />
           </div>
           <div style={{ marginTop: '10px' }}>
             <span style={configKey}>要約に使用する使用するプロンプト</span>
