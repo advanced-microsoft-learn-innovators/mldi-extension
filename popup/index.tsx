@@ -66,10 +66,6 @@ function IndexPopup() {
             <span style={configKey}>要約する段落レベル</span>
             <HeadingCheckBoxGroup />
           </div>
-          <div style={configItem}>
-            <span style={configKey}>要約する段落レベル</span>
-            <HeadingCheckBoxGroup />
-          </div>
           <div style={{ marginTop: '10px' }}>
             <span style={configKey}>要約に使用する使用するプロンプト</span>
             <textarea
