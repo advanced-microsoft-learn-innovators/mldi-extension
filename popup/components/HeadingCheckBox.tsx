@@ -16,7 +16,6 @@ export const HeadingCheckBox = ({
       checkboxRef.current.checked = true;
     }
   }, [isShowSummary]);
-
   const Label = styled.label`
     padding-left: 10px;
     padding-right: 10px;
