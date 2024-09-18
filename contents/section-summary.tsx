@@ -3,6 +3,7 @@ import type {
   PlasmoGetInlineAnchorList,
   PlasmoGetStyle
 } from 'plasmo';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { SummaryCard } from './components/SummaryCard';
 import summaryCardStyle from 'data-text:./styles/SummaryCard.scss';

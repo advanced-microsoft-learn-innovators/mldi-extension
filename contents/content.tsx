@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from 'plasmo';
 import type { SwResponse } from '@advanced-microsoft-learn-innovators/mldi-types';
+import React from 'react';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://learn.microsoft.com/*']

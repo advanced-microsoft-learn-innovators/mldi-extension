@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { SummaryCard } from './components/SummaryCard';
 import summaryCardStyle from 'data-text:./styles/SummaryCard.scss';
 import { useStorage } from '@plasmohq/storage/hook';
+import React from 'react';
 
 /**
  * Plasmo configuration for the content script.
