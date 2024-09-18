@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { storage } from '~background';
+import { storage } from 'background';
 
 // Intentionally not using useStorage for toggle animation.
 // If useStorage is used, the rendering is happened and skip the animation.

@@ -1,4 +1,4 @@
-import { storage } from '~background';
+import { storage } from 'background';
 import type { Message } from '~types';
 import { sleep } from '~utils';
 

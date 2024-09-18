@@ -5,7 +5,7 @@ export const showWordDescriptionCard = (info) => {
       active: true,
       lastFocusedWindow: true
     });
-    
+
     // Todo: Define and use types or interfaces for the messages
     // 1. get position of selected text
     const rect = await chrome.tabs.sendMessage(tab.id, {
