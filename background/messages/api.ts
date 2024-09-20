@@ -30,14 +30,16 @@ const handleApi = (
         const url = message.data.url;
 
         // get heading level setting
+        const isSummaryHeadeingLevels = storage.get(
+          'isSummaryHeadeingLevels'
+        ) || { h2: false, h3: false, h4: false };
 
-        const headingLevel = '';
+        // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
         const response: AxiosResponse = await axios.get(
-          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}`,
+          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`,
           {
             params: {
-              url: url,
-              aoaiSummayHeadingsLevel: headingLevel
+              url: url
             }
           }
         );
