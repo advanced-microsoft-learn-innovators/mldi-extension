@@ -1,7 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import { storage } from 'background';
 
-const ToggleSwitch = () => {
+// Intentionally not using useStorage for toggle animation.
+// If useStorage is used, the rendering is happened and skip the animation.
+// If you want to use useStorage, you may need to create "SAVE" button.
+const ToggleSwitch = (params: { storageKey: string }) => {
+  const checkboxRef = React.useRef(null);
+  React.useEffect(() => {
+    (async () => {
+      const isChecked = await storage.get(params.storageKey);
+      if (checkboxRef.current) {
+        checkboxRef.current.checked = isChecked;
+      }
+    })();
+  }, []);
+
   const Canvas = styled.label`
     display: flex;
     align-items: center;
@@ -46,7 +60,16 @@ const ToggleSwitch = () => {
 
   return (
     <Canvas>
-      <Input type="checkbox" />
+      <Input
+        type="checkbox"
+        ref={checkboxRef}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          (async () => {
+            await storage.set(params.storageKey, isChecked);
+          })();
+        }}
+      />
       <Switch />
     </Canvas>
   );

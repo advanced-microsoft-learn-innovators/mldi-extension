@@ -1,10 +1,21 @@
+import React from 'react';
 import styled from 'styled-components';
 
 export const HeadingCheckBox = ({
-  headingLevel
+  headingLevel,
+  isShowSummary,
+  setIsShowSummary
 }: {
   headingLevel: 'h2' | 'h3' | 'h4';
+  isShowSummary: boolean;
+  setIsShowSummary: (isShowSummary: boolean) => void;
 }) => {
+  const checkboxRef = React.useRef(null);
+  React.useEffect(() => {
+    if (isShowSummary) {
+      checkboxRef.current.checked = true;
+    }
+  }, [isShowSummary]);
   const Label = styled.label`
     padding-left: 10px;
     padding-right: 10px;
@@ -35,7 +46,15 @@ export const HeadingCheckBox = ({
   `;
   return (
     <div>
-      <Input type="checkbox" id={`heading-checkbox-${headingLevel}`} />
+      <Input
+        ref={checkboxRef}
+        type="checkbox"
+        id={`heading-checkbox-${headingLevel}`}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          setIsShowSummary(isChecked);
+        }}
+      />
       <Label htmlFor={`heading-checkbox-${headingLevel}`}>{headingLevel}</Label>
     </div>
   );

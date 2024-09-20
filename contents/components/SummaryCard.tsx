@@ -1,4 +1,5 @@
 import aoaiIcon from 'data-base64:~assets/aoai_icon.svg';
+import React from 'react';
 
 export const SummaryCard = ({
   title,

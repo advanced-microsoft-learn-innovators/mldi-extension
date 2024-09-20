@@ -1,3 +1,4 @@
+import { storage } from 'background';
 import type { Message } from '~types';
 import { sleep } from '~utils';
 
@@ -75,7 +76,6 @@ const handleApi = (
         });
       })();
       return;
-
     case 'fetchWordDescription':
       // fetch description of the word
       (async () => {
@@ -92,6 +92,12 @@ const handleApi = (
           description: response.data.description,
           tags: response.data.tags
         });
+      })();
+      return;
+    case 'getIsShowDescription':
+      (async () => {
+        const isShowDescription = await storage.get('isShowDescription');
+        sendResponse(isShowDescription);
       })();
       return;
     default:

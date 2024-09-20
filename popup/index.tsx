@@ -3,6 +3,9 @@ import ToggleSwitch from './components/ToggleSwitch';
 import { HeadingCheckBoxGroup } from './components/HeadingCheckBoxGroup';
 
 function IndexPopup() {
+  const textareaRef = React.useRef(null);
+  const [summaryPrompt, setSummaryPrompt] = React.useState('');
+
   const configSection: React.CSSProperties = {
     borderBottom: '1px solid #E0E0E0',
     paddingBottom: '20px',
@@ -50,14 +53,14 @@ function IndexPopup() {
           <h2 style={configTitle}>単語の説明</h2>
           <div style={configItem}>
             <span style={configKey}>説明を表示する</span>
-            <ToggleSwitch />
+            <ToggleSwitch storageKey="isShowDescription" />
           </div>
         </div>
         <div style={configSection}>
           <h2 style={configTitle}>要約の表示</h2>
           <div style={configItem}>
             <span style={configKey}>要約を表示する</span>
-            <ToggleSwitch />
+            <ToggleSwitch storageKey="isShowSummary" />
           </div>
           <div style={configItem}>
             <span style={configKey}>要約する段落レベル</span>
@@ -66,6 +69,8 @@ function IndexPopup() {
           <div style={{ marginTop: '10px' }}>
             <span style={configKey}>要約に使用する使用するプロンプト</span>
             <textarea
+              ref={textareaRef}
+              value={summaryPrompt}
               style={{
                 width: '100%',
                 borderColor: '#E0E0E0',
@@ -73,6 +78,9 @@ function IndexPopup() {
                 height: '5em',
                 resize: 'vertical',
                 borderRadius: '5px'
+              }}
+              onChange={(e) => {
+                setSummaryPrompt(e.target.value);
               }}
             />
           </div>
