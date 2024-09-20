@@ -36,14 +36,14 @@ const handleApi = (
           type: 'response',
           command: 'fetchSectionSummary',
           data: {
-            sectionSummaries: data.aoaiOutputJsonHeadingById
+            sectionSummaries: data.headingSections
           }
         });
         await chrome.tabs.sendMessage(tab.id, {
           type: 'response',
           command: 'fetchSummary',
           data: {
-            summary: data.aoaiOutputJson
+            summary: data.mainSummary
           }
         });
       })();
