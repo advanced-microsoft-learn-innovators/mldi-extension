@@ -13,9 +13,24 @@ const handleApi = (
     case 'fetchSummary':
       // fetch summary
       (async () => {
-        const [documentId, uuid] = getDocumentIds();
-        console.log(documentId);
+        // get document_id and uuid
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          lastFocusedWindow: true
+        });
+        const res = await chrome.tabs.sendMessage(tab.id, {
+          type: 'getContentData',
+          command: 'getDucumentIds',
+          data: {}
+        });
+        const documentId = res.documentId;
+        const uuid = res.uuid;
+
+        // get url
         const url = message.data.url;
+
+        // get heading level setting
+
         const headingLevel = '';
         const response: AxiosResponse = await axios.get(
           `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}`,
@@ -28,15 +43,16 @@ const handleApi = (
         );
         const { data, status } = response;
 
-        const [tab] = await chrome.tabs.query({
-          active: true,
-          lastFocusedWindow: true
+        let headingSummaries = {};
+        data.headingSections.forEach((section) => {
+          headingSummaries[section.id] = section.sectionSummary;
         });
+
         await chrome.tabs.sendMessage(tab.id, {
           type: 'response',
           command: 'fetchSectionSummary',
           data: {
-            sectionSummaries: data.headingSections
+            sectionSummaries: data.headingSummaries
           }
         });
         await chrome.tabs.sendMessage(tab.id, {
