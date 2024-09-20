@@ -20,7 +20,7 @@ export const config: PlasmoCSConfig = {
  * Get the inline anchor for the Plasmo inline.
  */
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => {
-  const anchors = document.querySelectorAll('h2.heading-anchor');
+  const anchors = document.querySelectorAll('.heading-anchor');
   return Array.from(anchors).map((element) => ({
     element,
     insertPosition: 'afterend'
@@ -43,8 +43,14 @@ export const getStyle: PlasmoGetStyle = () => {
  * @returns
  */
 const sectionSummary = ({ anchor }) => {
+  console.log(anchor.element.localName);
   const [summary, setSummary] = useState('');
   const [isShowSummary] = useStorage<boolean>('isShowSummary');
+  const [isSummaryHeadingLevels] = useStorage<{
+    h2: boolean;
+    h3: boolean;
+    h4: boolean;
+  }>('isSummaryHeadeingLevels', { h2: false, h3: false, h4: false });
 
   useEffect(() => {
     if (!isShowSummary) return;
@@ -55,7 +61,8 @@ const sectionSummary = ({ anchor }) => {
     });
   }, [isShowSummary]);
 
-  if (isShowSummary) return <SummaryCard title="段落要約" body={summary} />;
+  if (isShowSummary && isSummaryHeadingLevels[anchor.element.localName])
+    return <SummaryCard title="段落要約" body={summary} />;
   return null;
 };
 
