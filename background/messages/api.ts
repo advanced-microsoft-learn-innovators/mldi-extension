@@ -1,6 +1,8 @@
+import type { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { storage } from 'background';
 import type { Message } from '~types';
-import { sleep } from '~utils';
+import { getDocumentIds, sleep } from '~utils';
 
 const handleApi = (
   message: Message,
@@ -11,38 +13,20 @@ const handleApi = (
     case 'fetchSummary':
       // fetch summary
       (async () => {
+        const [documentId, uuid] = getDocumentIds();
+        console.log(documentId);
         const url = message.data.url;
-        // const response: AxiosResponse = await axios.get(
-        //   `http://localhost:3000/scraped-contents`,
-        //   {
-        //     params: {
-        //       url: url,
-        //       isSummary: true,
-        //       aoaiSummaryHeadingsLevel: [false, true, false],
-        //       isTermDefinition: false
-        //     }
-        //   }
-        // );
-        const response = {
-          aoaiOutputJson: {
-            summary: 'This is a summary.',
-            keywords: ['keyword1', 'keyword2']
-          },
-          aoaiOutputJsonHeadingById: {
-            'guest-invitation-process':
-              'This is a summary of guest-invitation-process',
-            'set-up-guest-access': 'This is a summary of set-up-guest-access',
-            'licensing-for-guest-access':
-              'This is a summary of licensing-for-guest-access',
-            'diagnosing-issues-with-guest-access':
-              'This is a summary of diagnosing-issues-with-guest-access',
-            'tracking-guests-in-your-organization':
-              'This is a summary of tracking-guests-in-your-organization',
-            'related-topics': 'This is a summary of related-topics'
+        const headingLevel = '';
+        const response: AxiosResponse = await axios.get(
+          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}`,
+          {
+            params: {
+              url: url,
+              aoaiSummayHeadingsLevel: headingLevel
+            }
           }
-        };
-
-        await sleep(10000);
+        );
+        const { data, status } = response;
 
         const [tab] = await chrome.tabs.query({
           active: true,
@@ -52,14 +36,14 @@ const handleApi = (
           type: 'response',
           command: 'fetchSectionSummary',
           data: {
-            sectionSummaries: response.aoaiOutputJsonHeadingById
+            sectionSummaries: data.aoaiOutputJsonHeadingById
           }
         });
         await chrome.tabs.sendMessage(tab.id, {
           type: 'response',
           command: 'fetchSummary',
           data: {
-            summary: response.aoaiOutputJson.summary
+            summary: data.aoaiOutputJson
           }
         });
       })();
