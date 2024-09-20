@@ -30,9 +30,10 @@ const handleApi = (
         const url = message.data.url;
 
         // get heading level setting
-        const isSummaryHeadeingLevels = storage.get(
+        const isSummaryHeadeingLevels = (await storage.get(
           'isSummaryHeadeingLevels'
-        ) || { h2: false, h3: false, h4: false };
+        )) || { h2: false, h3: false, h4: false };
+        console.log(isSummaryHeadeingLevels);
 
         // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
         const response: AxiosResponse = await axios.get(
