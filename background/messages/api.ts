@@ -37,12 +37,7 @@ const handleApi = (
 
         // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
         const response: AxiosResponse = await axios.get(
-          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`,
-          {
-            params: {
-              url: url
-            }
-          }
+          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=https://learn.microsoft.com/ja-jp/deployedge/microsoft-edge-channels&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
         );
         const { data, status } = response;
 
