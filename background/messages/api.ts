@@ -42,15 +42,19 @@ const handleApi = (
         const { data, status } = response;
 
         let headingSummaries = {};
-        data.headingSections.forEach((section) => {
-          headingSummaries[section.id] = section.sectionSummary;
-        });
+        if (data?.headingSection.length > 0) {
+          console.log(data);
+          // ensure data might be undefined
+          data.headingSection.forEach((section) => {
+            headingSummaries[section.id] = section.sectionSummary;
+          });
+        }
 
         await chrome.tabs.sendMessage(tab.id, {
           type: 'response',
           command: 'fetchSectionSummary',
           data: {
-            sectionSummaries: data.headingSummaries
+            sectionSummaries: headingSummaries
           }
         });
         await chrome.tabs.sendMessage(tab.id, {
