@@ -1,6 +1,8 @@
+import type { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { storage } from 'background';
 import type { Message } from '~types';
-import { sleep } from '~utils';
+import { getDocumentIds, sleep } from '~utils';
 
 const handleApi = (
   message: Message,
@@ -11,55 +13,55 @@ const handleApi = (
     case 'fetchSummary':
       // fetch summary
       (async () => {
-        const url = message.data.url;
-        // const response: AxiosResponse = await axios.get(
-        //   `http://localhost:3000/scraped-contents`,
-        //   {
-        //     params: {
-        //       url: url,
-        //       isSummary: true,
-        //       aoaiSummaryHeadingsLevel: [false, true, false],
-        //       isTermDefinition: false
-        //     }
-        //   }
-        // );
-        const response = {
-          aoaiOutputJson: {
-            summary: 'This is a summary.',
-            keywords: ['keyword1', 'keyword2']
-          },
-          aoaiOutputJsonHeadingById: {
-            'guest-invitation-process':
-              'This is a summary of guest-invitation-process',
-            'set-up-guest-access': 'This is a summary of set-up-guest-access',
-            'licensing-for-guest-access':
-              'This is a summary of licensing-for-guest-access',
-            'diagnosing-issues-with-guest-access':
-              'This is a summary of diagnosing-issues-with-guest-access',
-            'tracking-guests-in-your-organization':
-              'This is a summary of tracking-guests-in-your-organization',
-            'related-topics': 'This is a summary of related-topics'
-          }
-        };
-
-        await sleep(10000);
-
+        // get document_id and uuid
         const [tab] = await chrome.tabs.query({
           active: true,
           lastFocusedWindow: true
         });
+        const res = await chrome.tabs.sendMessage(tab.id, {
+          type: 'getContentData',
+          command: 'getDucumentIds',
+          data: {}
+        });
+        const documentId = res.documentId;
+        const uuid = res.uuid;
+
+        // get url
+        const url = message.data.url;
+
+        // get heading level setting
+        const isSummaryHeadeingLevels = (await storage.get(
+          'isSummaryHeadeingLevels'
+        )) || { h2: false, h3: false, h4: false };
+        console.log(isSummaryHeadeingLevels);
+
+        // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
+        const response: AxiosResponse = await axios.get(
+          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=https://learn.microsoft.com/ja-jp/deployedge/microsoft-edge-channels&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
+        );
+        const { data, status } = response;
+
+        let headingSummaries = {};
+        if (data?.headingSection.length > 0) {
+          console.log(data);
+          // ensure data might be undefined
+          data.headingSection.forEach((section) => {
+            headingSummaries[section.id] = section.sectionSummary;
+          });
+        }
+
         await chrome.tabs.sendMessage(tab.id, {
           type: 'response',
           command: 'fetchSectionSummary',
           data: {
-            sectionSummaries: response.aoaiOutputJsonHeadingById
+            sectionSummaries: headingSummaries
           }
         });
         await chrome.tabs.sendMessage(tab.id, {
           type: 'response',
           command: 'fetchSummary',
           data: {
-            summary: response.aoaiOutputJson.summary
+            summary: data.mainSummary
           }
         });
       })();
