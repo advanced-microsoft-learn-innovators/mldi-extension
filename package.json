@@ -1,7 +1,7 @@
 {
   "name": "mldi-extension",
   "displayName": "MLDI extension",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha",
   "description": "Browser Extension for Microsoft Learning Documentation Insights (MLDI)",
   "author": "Advanced Microsoft Learn Innovators",
   "license": "UNLICENSED",
