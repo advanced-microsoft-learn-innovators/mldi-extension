@@ -23,12 +23,15 @@ window.addEventListener('load', async () => {
   console.log('content.ts loaded');
   chrome.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
-      const [documentId, uuid, url] = getDocumentIds();
-      sendResponse({
-        documentId,
-        uuid,
-        url
-      });
+      switch (message.command) {
+        case 'getDocumentIds':
+          const [documentId, uuid, url] = getDocumentIds();
+          sendResponse({
+            documentId,
+            uuid,
+            url
+          });
+      }
     }
   );
 });
