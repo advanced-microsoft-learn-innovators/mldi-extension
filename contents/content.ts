@@ -4,6 +4,7 @@ const getDocumentIds = () => {
   const headChildren = document.head.children;
   let documentId = '';
   let uuid = '';
+  let url = '';
 
   for (var i = 0; i < headChildren.length; i++) {
     var tmp = headChildren[i].getAttribute('name');
@@ -13,17 +14,20 @@ const getDocumentIds = () => {
       uuid = headChildren[i].getAttribute('content');
     }
   }
-  return [documentId, uuid];
+
+  url = window.location.href;
+  return [documentId, uuid, url];
 };
 
 window.addEventListener('load', async () => {
   console.log('content.ts loaded');
   chrome.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
-      const [documentId, uuid] = getDocumentIds();
+      const [documentId, uuid, url] = getDocumentIds();
       sendResponse({
         documentId,
-        uuid
+        uuid,
+        url
       });
     }
   );
