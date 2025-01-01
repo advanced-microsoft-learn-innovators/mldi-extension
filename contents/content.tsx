@@ -1,6 +1,7 @@
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from 'plasmo';
 import type { SwResponse } from '@advanced-microsoft-learn-innovators/mldi-types';
 import React from 'react';
+import { Logger } from '../utils';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://learn.microsoft.com/*']
@@ -23,10 +24,10 @@ const getSenderTabId = (callback: (tabId: number) => void) => {
         callback(response.tabId);
       } else if (response.isSuccess && response.type !== 'tabId') {
         //error
-        console.error('Invalid response type');
+        Logger.error('Invalid response type');
       } else {
         // error
-        console.error(response);
+        Logger.error(response.error.message);
       }
     }
   );
@@ -55,10 +56,10 @@ const getApiRes = (
         callback(response.apiResponse);
       } else if (response.isSuccess && response.type !== 'apiRes') {
         // error
-        console.error('Invalid response type');
+        Logger.error('Invalid response type');
       } else {
         // error
-        console.error(response);
+        Logger.error(response.error.message);
       }
     }
   );

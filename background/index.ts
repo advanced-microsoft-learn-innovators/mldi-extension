@@ -71,7 +71,7 @@ chrome.runtime.onMessage.addListener(
       }
     } catch (error) {
       Logger.info('Before Error');
-      console.error(error);
+      Logger.error(error);
       Logger.info('After Error');
       // send error message back to raise an error in the content script
       const swErrorResponse: SwErrorResponse = {
