@@ -1,8 +1,8 @@
-@import 'variables';
+@use 'variables';
 
 .mldi_word_card {
   padding: 10px;
-  background-color: $base-color;
+  background-color: variables.$base-color;
   border-radius: 6px;
   width: 400px;
   height: 150px;
@@ -14,13 +14,13 @@
   z-index: 1001;
 
   .word {
-    font-family: $default-font-family;
+    font-family: variables.$default-font-family;
     font-weight: 600;
     width: 100%;
   }
 
   .description {
-    font-family: $default-font-family;
+    font-family: variables.$default-font-family;
     margin-top: 4px;
     flex: 1;
     width: 100%;
@@ -29,25 +29,25 @@
   }
 
   .tags {
-    font-family: $default-font-family;
+    font-family: variables.$default-font-family;
     margin-top: 4px;
     width: 100%;
     height: 20px;
 
     .tag {
-      font-family: $default-font-family;
+      font-family: variables.$default-font-family;
     }
   }
 
   .bubble_tip {
     width: 15px;
     height: 10px;
-    background-color: $base-color;
+    background-color: variables.$base-color;
     border: none;
   }
 
   .loading {
-    background-color: $loading-color;
+    background-color: variables.$loading-color;
     overflow: hidden;
     border-radius: 4px;
     position: relative;

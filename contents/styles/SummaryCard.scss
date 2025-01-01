@@ -1,13 +1,13 @@
-@import 'variables';
+@use 'variables';
 
 .mldi_card_base {
-  background-color: $base-color;
+  background-color: variables.$base-color;
   border-radius: 6px;
   flex-basis: 100%;
   margin-left: 0px;
   margin-right: 0px;
   padding: 16px;
-  font-family: $default-font-family;
+  font-family: variables.$default-font-family;
 
   .card_title {
     font-weight: 600;
@@ -20,7 +20,7 @@
     }
 
     .card_title_text {
-      font-family: $default-font-family;
+      font-family: variables.$default-font-family;
       font-size: 16px;
       color: #555555;
       margin-left: 8px;
@@ -29,7 +29,7 @@
   }
 
   .card_body {
-    font-family: $default-font-family;
+    font-family: variables.$default-font-family;
     font-size: 16px;
     margin-top: 16px;
   }
@@ -38,7 +38,7 @@
     $loading-height: 5em;
 
     margin-top: 16px;
-    background-color: $loading-color;
+    background-color: variables.$loading-color;
     height: $loading-height;
     overflow: hidden;
     border-radius: 4px;
