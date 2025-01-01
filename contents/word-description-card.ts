@@ -1,4 +1,5 @@
 import type { Message } from 'types';
+import { Logger } from '~utils';
 
 const fetchKeywordsAndAddClassToAllKeywords = async () => {
   const allContent = document.getElementsByClassName('content')[0];
@@ -97,7 +98,7 @@ window.addEventListener('load', async () => {
     type: 'api',
     command: 'getIsShowDescription'
   });
-  console.log(isShowDescription);
+  Logger.info(`isShowDescription: ${isShowDescription}`);
   if (!isShowDescription) return;
 
   // fetch keywords and add the class to all the keywords

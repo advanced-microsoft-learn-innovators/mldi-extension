@@ -16,3 +16,13 @@ export const getDocumentIds = () => {
   }
   return [documentId, uuid];
 };
+
+export class Logger {
+  public static info(message: string) {
+    console.log(`[INF] ${message}`);
+  }
+
+  public static error(message: string) {
+    console.log(`[ERR] ${message}`);
+  }
+}
