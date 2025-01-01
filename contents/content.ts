@@ -1,4 +1,5 @@
 import type { Message } from '~types';
+import { Logger } from '~utils';
 
 const getDocumentIds = () => {
   const headChildren = document.head.children;
@@ -17,7 +18,7 @@ const getDocumentIds = () => {
 };
 
 window.addEventListener('load', async () => {
-  console.log('content.ts loaded');
+  Logger.info('content.ts loaded');
   chrome.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
       const [documentId, uuid] = getDocumentIds();

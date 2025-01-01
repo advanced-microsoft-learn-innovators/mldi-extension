@@ -13,6 +13,7 @@ import type { Message } from '~types';
 import handleApi from './messages/api';
 import handleRelay from './messages/relay';
 import { Storage } from '@plasmohq/storage';
+import { Logger } from '~utils';
 
 /**
  * Background script (service worker) for the extension.
@@ -44,6 +45,7 @@ chrome.runtime.onMessage.addListener(
     try {
       if (message.requestType === 'getSenderTabId') {
         // get tabId and send it back to the content script
+        Logger.info('getSenderTabId');
         const tabId = getSenderTabId(sender);
         const swResponse: SwSuccessResponseTabId = {
           isSuccess: true,
@@ -68,7 +70,9 @@ chrome.runtime.onMessage.addListener(
         sendResponse(swApiResResponse);
       }
     } catch (error) {
+      Logger.info('Before Error');
       console.error(error);
+      Logger.info('After Error');
       // send error message back to raise an error in the content script
       const swErrorResponse: SwErrorResponse = {
         isSuccess: false,
@@ -99,7 +103,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 // add message listener
 chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendResponse) => {
-    console.log(`[DEBUG] background: ${message.type}:${message.command}`);
+    Logger.info(`background: ${message.type}:${message.command}`);
     switch (message.type) {
       case 'api':
         handleApi(message, sender, sendResponse);

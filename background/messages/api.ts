@@ -2,7 +2,7 @@ import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import { storage } from 'background';
 import type { Message } from '~types';
-import { getDocumentIds, sleep } from '~utils';
+import { getDocumentIds, Logger, sleep } from '~utils';
 
 const handleApi = (
   message: Message,
@@ -33,7 +33,6 @@ const handleApi = (
         const isSummaryHeadeingLevels = (await storage.get(
           'isSummaryHeadeingLevels'
         )) || { h2: false, h3: false, h4: false };
-        console.log(isSummaryHeadeingLevels);
 
         // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
         const response: AxiosResponse = await axios.get(
@@ -43,7 +42,6 @@ const handleApi = (
 
         let headingSummaries = {};
         if (data?.headingSection.length > 0) {
-          console.log(data);
           // ensure data might be undefined
           data.headingSection.forEach((section) => {
             headingSummaries[section.id] = section.sectionSummary;
@@ -99,6 +97,7 @@ const handleApi = (
     case 'getIsShowDescription':
       (async () => {
         const isShowDescription = await storage.get('isShowDescription');
+        Logger.info(`isShowDescription: ${isShowDescription}`);
         sendResponse(isShowDescription);
       })();
       return;
