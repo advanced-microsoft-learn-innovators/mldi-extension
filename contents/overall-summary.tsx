@@ -43,7 +43,8 @@ const overallSummary = () => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSummary') return;
-      setSummary(message.data.summary);
+      if (message.data.status === 500) setSummary('Failed to get summary.');
+      else setSummary(message.data.summary);
     });
     (async () => {
       await chrome.runtime.sendMessage({

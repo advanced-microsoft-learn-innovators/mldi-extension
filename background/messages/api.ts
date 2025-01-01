@@ -47,33 +47,59 @@ const handleApi = (
         Logger.info(
           `isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`
         );
-        const response: AxiosResponse = await axios.get(
-          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
-        );
-        const { data, status } = response;
+        Logger.info('fetchSummary');
 
-        let headingSummaries = {};
-        if (data?.headingSection.length > 0) {
-          // ensure data might be undefined
-          data.headingSection.forEach((section) => {
-            headingSummaries[section.id] = section.sectionSummary;
+        try {
+          const response: AxiosResponse = await axios.get(
+            `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
+          );
+          const { data, status } = response;
+          Logger.info(`status: ${status}`);
+          let headingSummaries = {};
+          if (data?.headingSection.length > 0) {
+            // ensure data might be undefined
+            data.headingSection.forEach((section) => {
+              headingSummaries[section.id] = section.sectionSummary;
+            });
+          }
+
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'response',
+            command: 'fetchSectionSummary',
+            data: {
+              status: status,
+              sectionSummaries: headingSummaries
+            }
+          });
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'response',
+            command: 'fetchSummary',
+            data: {
+              status: status,
+              summary: data.mainSummary
+            }
+          });
+        } catch (error) {
+          Logger.error(`fetchSummary error: ${error}`);
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'response',
+            command: 'fetchSectionSummary',
+            data: {
+              status: 500,
+              sectionSummaries: {}
+            }
+          });
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'response',
+            command: 'fetchSummary',
+            data: {
+              status: 500,
+              summary: ''
+            }
           });
         }
 
-        await chrome.tabs.sendMessage(tab.id, {
-          type: 'response',
-          command: 'fetchSectionSummary',
-          data: {
-            sectionSummaries: headingSummaries
-          }
-        });
-        await chrome.tabs.sendMessage(tab.id, {
-          type: 'response',
-          command: 'fetchSummary',
-          data: {
-            summary: data.mainSummary
-          }
-        });
+        Logger.info('fetchSummary response');
       })();
     case 'fetchWordList':
       // fetch word list
