@@ -35,8 +35,20 @@ const handleApi = (
         )) || { h2: false, h3: false, h4: false };
 
         // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
+        Logger.info(`documentId: ${documentId}`);
+        Logger.info(`url: ${url}`);
+        Logger.info(`uuid: ${uuid}`);
+        Logger.info(
+          `isSummaryHeadeingLevels.h2: ${isSummaryHeadeingLevels['h2']}`
+        );
+        Logger.info(
+          `isSummaryHeadeingLevels.h3: ${isSummaryHeadeingLevels['h3']}`
+        );
+        Logger.info(
+          `isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`
+        );
         const response: AxiosResponse = await axios.get(
-          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=https://learn.microsoft.com/ja-jp/deployedge/microsoft-edge-channels&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
+          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
         );
         const { data, status } = response;
 
