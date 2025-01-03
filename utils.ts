@@ -35,8 +35,8 @@ export class Logger {
  * @param message: Message
  * @returns
  */
-export const sendMessage = async (isBackgroud: boolean, message: Message) => {
-  if (isBackgroud) {
+export const sendMessage = async (isBackground: boolean, message: Message) => {
+  if (isBackground) {
     const [tab] = await chrome.tabs.query({
       active: true,
       lastFocusedWindow: true
