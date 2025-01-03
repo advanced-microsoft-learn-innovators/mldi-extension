@@ -8,6 +8,8 @@ import { SummaryCard } from './components/SummaryCard';
 import summaryCardStyle from 'data-text:./styles/SummaryCard.scss';
 import { useStorage } from '@plasmohq/storage/hook';
 import React from 'react';
+import { sendMessage } from '~utils';
+import { MessageApiCommand, MessageType } from '~types';
 
 /**
  * Plasmo configuration for the content script.
@@ -47,9 +49,9 @@ const overallSummary = () => {
       else setSummary(message.data.summary);
     });
     (async () => {
-      await chrome.runtime.sendMessage({
-        type: 'api',
-        command: 'fetchSummary',
+      await sendMessage(false, {
+        type: MessageType.API,
+        command: MessageApiCommand.FETCH_SUMMARY,
         data: { url: window.location.href }
       });
     })();

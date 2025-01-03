@@ -1,4 +1,6 @@
+import { truncate } from 'fs';
 import { MessageContextMenuCommand, MessageType } from '~types';
+import { sendMessage } from '~utils';
 
 export const showWordDescriptionCard = (info) => {
   const selectedText = info.selectionText;
@@ -10,13 +12,13 @@ export const showWordDescriptionCard = (info) => {
 
     // Todo: Define and use types or interfaces for the messages
     // 1. get position of selected text
-    const rect = await chrome.tabs.sendMessage(tab.id, {
+    const rect = await sendMessage(true, {
       type: MessageType.CONTEXT_MENU,
       command: MessageContextMenuCommand.GET_RECT
     });
 
     // 2. show the card and the word (selected text)
-    await chrome.tabs.sendMessage(tab.id, {
+    await sendMessage(true, {
       type: MessageType.CONTEXT_MENU,
       command: MessageContextMenuCommand.SHOW_CARD,
       data: {
@@ -26,7 +28,7 @@ export const showWordDescriptionCard = (info) => {
     });
 
     // 3. set timeout to hide card, 5000ms
-    await chrome.tabs.sendMessage(tab.id, {
+    await sendMessage(true, {
       type: MessageType.CONTEXT_MENU,
       command: MessageContextMenuCommand.SET_TIMEOUT,
       data: {

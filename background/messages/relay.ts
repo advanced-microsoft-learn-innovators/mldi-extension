@@ -1,4 +1,5 @@
 import { MessageType, type Message } from '~types';
+import { sendMessage } from '~utils';
 
 const handleRelay = (message: Message) => {
   if (message.type !== MessageType.RELAY) return;
@@ -12,7 +13,7 @@ const handleRelay = (message: Message) => {
       command: message.command,
       data: message.data
     };
-    const result = await chrome.tabs.sendMessage(tab.id, msg);
+    const result = await sendMessage(true, msg);
   })();
 };
 

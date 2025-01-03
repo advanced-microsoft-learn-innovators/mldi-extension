@@ -1,8 +1,13 @@
-import { Logger } from '~utils';
+import { Logger, sendMessage } from '~utils';
 import { storage } from 'background';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
-import type { Message } from '~types';
+import {
+  MessageApiCommand,
+  MessageToBrowserCommand,
+  MessageType,
+  type Message
+} from '~types';
 
 export const fetchSummary = async (message: Message) => {
   // get document_id and uuid
@@ -10,10 +15,9 @@ export const fetchSummary = async (message: Message) => {
     active: true,
     lastFocusedWindow: true
   });
-  const res = await chrome.tabs.sendMessage(tab.id, {
-    type: 'getContentData',
-    command: 'getDucumentIds',
-    data: {}
+  const res = await sendMessage(true, {
+    type: MessageType.TO_BROWSER,
+    command: MessageToBrowserCommand.GET_DOCUMENT_IDS
   });
   const documentId = res.documentId;
   const uuid = res.uuid;
@@ -40,20 +44,20 @@ export const fetchSummary = async (message: Message) => {
     mainSummary: string,
     sectionSummaries: any
   ) => {
-    await chrome.tabs.sendMessage(tab.id, {
-      type: 'response',
-      command: 'fetchSectionSummary',
-      data: {
-        status: status,
-        sectionSummaries: sectionSummaries
-      }
-    });
-    await chrome.tabs.sendMessage(tab.id, {
-      type: 'response',
-      command: 'fetchSummary',
+    await sendMessage(true, {
+      type: MessageType.TO_BROWSER,
+      command: MessageToBrowserCommand.FETCH_SUMMARY,
       data: {
         status: status,
         summary: mainSummary
+      }
+    });
+    await sendMessage(true, {
+      type: MessageType.TO_BROWSER,
+      command: MessageToBrowserCommand.FETCH_SECTION_SUMMARIES,
+      data: {
+        status: status,
+        sectionSummaries: sectionSummaries
       }
     });
   };

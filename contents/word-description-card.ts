@@ -1,13 +1,18 @@
-import type { Message } from 'types';
-import { Logger } from '~utils';
+import {
+  MessageApiCommand,
+  MessageRelayCommand,
+  MessageType,
+  type Message
+} from 'types';
+import { Logger, sendMessage } from '~utils';
 
 const fetchKeywordsAndAddClassToAllKeywords = async () => {
   const allContent = document.getElementsByClassName('content')[0];
   // get the word list using api
   const keywords: Array<string> = (
-    await chrome.runtime.sendMessage({
-      type: 'api',
-      command: 'fetchWordList',
+    await sendMessage(false, {
+      type: MessageType.API,
+      command: MessageApiCommand.FETCH_TERMS,
       data: {
         url: window.location.href
       }
@@ -62,9 +67,9 @@ const addHoverActionToKeywords = (allContent: Element) => {
       };
 
       // 2. show the card and the word (selected text)
-      chrome.runtime.sendMessage({
-        type: 'relay',
-        command: 'showCard',
+      sendMessage(false, {
+        type: MessageType.RELAY,
+        command: MessageRelayCommand.SHOW_CARD,
         data: {
           word: element.textContent,
           rect: rect
@@ -72,18 +77,18 @@ const addHoverActionToKeywords = (allContent: Element) => {
       });
 
       // 3. if timeoutId is exist, clear the timeout
-      chrome.runtime.sendMessage({
-        type: 'relay',
-        command: 'deleteTimeout'
+      sendMessage(false, {
+        type: MessageType.RELAY,
+        command: MessageRelayCommand.DELETE_TIMEOUT
       });
     });
 
     element.addEventListener('mouseleave', () => {
       // when the mouse leaves the keyword,
       // hide the card in 2000ms
-      chrome.runtime.sendMessage({
-        type: 'relay',
-        command: 'setTimeout',
+      sendMessage(false, {
+        type: MessageType.RELAY,
+        command: MessageRelayCommand.SET_TIMEOUT,
         data: {
           time: 2000
         }
@@ -94,9 +99,9 @@ const addHoverActionToKeywords = (allContent: Element) => {
 
 window.addEventListener('load', async () => {
   // get is show description
-  const isShowDescription = await chrome.runtime.sendMessage({
-    type: 'api',
-    command: 'getIsShowDescription'
+  const isShowDescription = await sendMessage(false, {
+    type: MessageType.API,
+    command: MessageApiCommand.GET_IS_SHOW_DESCRIPTION
   });
   Logger.info(`isShowDescription: ${isShowDescription}`);
   if (!isShowDescription) return;
