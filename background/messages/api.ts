@@ -19,7 +19,7 @@ const handleApi = (
     case MessageApiCommand.FETCH_TERMS:
       // fetch terms
       (async () => {
-        await fetchTerms(message, sendResponse);
+        await fetchTerms(sendResponse);
       })();
       return;
     case MessageApiCommand.GET_IS_SHOW_DESCRIPTION:
