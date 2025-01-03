@@ -56,7 +56,8 @@ const sectionSummary = ({ anchor }) => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSectionSummary') return;
-      setSummary(message.data.sectionSummaries[anchor.element.id]);
+      if (message.data.status === 500) setSummary('Failed to get summary.');
+      else setSummary(message.data.sectionSummaries[anchor.element.id]);
     });
   }, [isShowSummary]);
 

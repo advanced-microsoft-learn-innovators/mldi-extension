@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { Message } from '~types';
+import { MessageRelayCommand, type Message } from '~types';
 
 // TODO: Too many magic numbers. Refactor this.
 export const WordDescriptionCard = () => {
@@ -15,7 +15,7 @@ export const WordDescriptionCard = () => {
     chrome.runtime.onMessage.addListener(
       (message: Message, sender, sendResponse) => {
         switch (message.command) {
-          case 'showCard':
+          case MessageRelayCommand.SHOW_CARD:
             (async () => {
               setIsLoading(true);
               setWord(message.data.word);
@@ -24,13 +24,13 @@ export const WordDescriptionCard = () => {
               await fetchDescription(message.data.word);
             })();
             return;
-          case 'hideCard':
+          case MessageRelayCommand.HIDE_CARD:
             hideCard();
             return;
-          case 'setTimeout':
+          case MessageRelayCommand.SET_TIMEOUT:
             setTimeoutToHideCard(message.data.time);
             return;
-          case 'deleteTimeout':
+          case MessageRelayCommand.DELETE_TIMEOUT:
             deleteTimeoutToHideCard();
             return;
           default:
@@ -41,16 +41,16 @@ export const WordDescriptionCard = () => {
   }, []);
 
   const fetchDescription = async (word: string) => {
-    const response = await chrome.runtime.sendMessage({
-      type: 'api',
-      command: 'fetchWordDescription',
-      data: {
-        word: word
-      }
-    });
-    setDescription(response.description);
-    setTags(response.tags);
-    setIsLoading(false);
+    // const response = await chrome.runtime.sendMessage({
+    //   type: 'api',
+    //   command: 'fetchWordDescription',
+    //   data: {
+    //     word: word
+    //   }
+    // });
+    // setDescription(response.description);
+    // setTags(response.tags);
+    // setIsLoading(false);
   };
 
   const hideCard = () => {

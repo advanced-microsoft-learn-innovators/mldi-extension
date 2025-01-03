@@ -1,4 +1,4 @@
-import type { Message } from '~types';
+import { MessageToBrowserCommand, MessageType, type Message } from '~types';
 import { Logger } from '~utils';
 
 const getDocumentIds = () => {
@@ -21,11 +21,20 @@ window.addEventListener('load', async () => {
   Logger.info('content.ts loaded');
   chrome.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
-      const [documentId, uuid] = getDocumentIds();
-      sendResponse({
-        documentId,
-        uuid
-      });
+      Logger.info(`content.ts: ${message.type}:${message.command}`);
+      if (message.type !== MessageType.TO_BROWSER) return;
+      switch (message.command) {
+        case MessageToBrowserCommand.GET_DOCUMENT_IDS:
+          const [documentId, uuid] = getDocumentIds();
+          sendResponse({
+            documentId,
+            uuid
+          });
+          return;
+        default:
+          Logger.info(`Unknown command: ${message.command}`);
+          return;
+      }
     }
   );
 });
