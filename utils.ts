@@ -31,7 +31,7 @@ export class Logger {
 
 /**
  *
- * @param isBackground is true, send message from background, otherwise send message from content script.
+ * @param isBackground: If you send message from background, set this to true
  * @param message: Message
  * @returns
  */
