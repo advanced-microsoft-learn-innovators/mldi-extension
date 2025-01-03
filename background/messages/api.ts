@@ -1,6 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import { storage } from 'background';
+import { send } from 'process';
 import type { Message } from '~types';
 import { getDocumentIds, Logger, sleep } from '~utils';
 
@@ -47,12 +48,33 @@ const handleApi = (
         Logger.info(
           `isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`
         );
-        Logger.info('fetchSummary');
+        const restApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`;
+        Logger.info(`restApiUrl: ${restApiUrl}`);
+        const sendResponse = async (
+          status: number,
+          mainSummary: string,
+          sectionSummaries: any
+        ) => {
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'response',
+            command: 'fetchSectionSummary',
+            data: {
+              status: status,
+              sectionSummaries: sectionSummaries
+            }
+          });
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'response',
+            command: 'fetchSummary',
+            data: {
+              status: status,
+              summary: mainSummary
+            }
+          });
+        };
 
         try {
-          const response: AxiosResponse = await axios.get(
-            `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
-          );
+          const response: AxiosResponse = await axios.get(restApiUrl);
           const { data, status } = response;
           Logger.info(`status: ${status}`);
           let headingSummaries = {};
@@ -61,42 +83,12 @@ const handleApi = (
             data.headingSection.forEach((section) => {
               headingSummaries[section.id] = section.sectionSummary;
             });
-          }
 
-          await chrome.tabs.sendMessage(tab.id, {
-            type: 'response',
-            command: 'fetchSectionSummary',
-            data: {
-              status: status,
-              sectionSummaries: headingSummaries
-            }
-          });
-          await chrome.tabs.sendMessage(tab.id, {
-            type: 'response',
-            command: 'fetchSummary',
-            data: {
-              status: status,
-              summary: data.mainSummary
-            }
-          });
+            await sendResponse(status, data.mainSummary, headingSummaries);
+          }
         } catch (error) {
           Logger.error(`fetchSummary error: ${error}`);
-          await chrome.tabs.sendMessage(tab.id, {
-            type: 'response',
-            command: 'fetchSectionSummary',
-            data: {
-              status: 500,
-              sectionSummaries: {}
-            }
-          });
-          await chrome.tabs.sendMessage(tab.id, {
-            type: 'response',
-            command: 'fetchSummary',
-            data: {
-              status: 500,
-              summary: ''
-            }
-          });
+          await sendResponse(500, '', '');
         }
 
         Logger.info('fetchSummary response');
