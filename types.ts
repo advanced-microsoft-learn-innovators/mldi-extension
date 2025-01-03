@@ -6,19 +6,19 @@ export type Message = {
 };
 
 export enum MessageType {
-  API = 'api',
-  RELAY = 'relay',
-  CONTEXT_MENU = 'contextMenu'
+  API,
+  RELAY,
+  CONTEXT_MENU
 }
 
 export enum MessageApiCommand {
-  FETCH_SUMMARY = 'fetchSummary',
-  FETCH_TERMS = 'fetchTerms',
-  GET_IS_SHOW_DESCRIPTION = 'getIsShowDescription'
+  FETCH_SUMMARY,
+  FETCH_TERMS,
+  GET_IS_SHOW_DESCRIPTION
 }
 
 export enum MessageContextMenuCommand {
-  GET_RECT = 'getRect',
-  SHOW_CARD = 'showCard',
-  SET_TIMEOUT = 'setTimeout'
+  GET_RECT,
+  SHOW_CARD,
+  SET_TIMEOUT
 }

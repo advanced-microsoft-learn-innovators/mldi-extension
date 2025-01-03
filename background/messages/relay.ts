@@ -1,4 +1,4 @@
-import type { Message } from '~types';
+import { MessageType, type Message } from '~types';
 
 const handleRelay = (message: Message) => {
   if (message.type !== 'relay') return;
@@ -8,7 +8,7 @@ const handleRelay = (message: Message) => {
       lastFocusedWindow: true
     });
     const msg: Message = {
-      type: 'relay',
+      type: MessageType.RELAY,
       command: message.command,
       data: message.data
     };
