@@ -1,7 +1,7 @@
 import { MessageType, type Message } from '~types';
 
 const handleRelay = (message: Message) => {
-  if (message.type !== 'relay') return;
+  if (message.type !== MessageType.RELAY) return;
   (async () => {
     const [tab] = await chrome.tabs.query({
       active: true,
