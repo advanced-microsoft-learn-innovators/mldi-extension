@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  MessageApiCommand,
-  MessageRelayCommand,
-  MessageType,
-  type Message
-} from '~types';
-import { sendMessage } from '~utils';
+import { MessageRelayCommand, type Message } from '~types';
 
 // TODO: Too many magic numbers. Refactor this.
 export const WordDescriptionCard = () => {

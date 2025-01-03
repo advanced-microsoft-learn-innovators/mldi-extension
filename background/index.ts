@@ -37,7 +37,8 @@ chrome.runtime.onMessage.addListener(
       case MessageType.RELAY:
         handleRelay(message);
         return;
-      case MessageType.CONTEXT_MENU:
+      case MessageType.TO_BROWSER:
+        Logger.info('background is not handle TO_BROWSER message');
         return;
       default:
         return;

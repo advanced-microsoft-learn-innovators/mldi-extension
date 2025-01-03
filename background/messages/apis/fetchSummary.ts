@@ -2,19 +2,10 @@ import { Logger, sendMessage } from '~utils';
 import { storage } from 'background';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
-import {
-  MessageApiCommand,
-  MessageToBrowserCommand,
-  MessageType,
-  type Message
-} from '~types';
+import { MessageToBrowserCommand, MessageType, type Message } from '~types';
 
 export const fetchSummary = async (message: Message) => {
   // get document_id and uuid
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true
-  });
   const res = await sendMessage(true, {
     type: MessageType.TO_BROWSER,
     command: MessageToBrowserCommand.GET_DOCUMENT_IDS

@@ -17,7 +17,7 @@ const handleApi = (
       })();
       return;
     case MessageApiCommand.FETCH_TERMS:
-      // fetch word list
+      // fetch terms
       (async () => {
         await fetchTerms(message, sendResponse);
       })();
