@@ -21,7 +21,7 @@ export const fetchSummary = async (message: Message) => {
     'isSummaryHeadeingLevels'
   )) || { h2: false, h3: false, h4: false };
 
-  // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
+  // cannot set summarySectionLevels parameter in "params", because cannot set same key multiple times
   Logger.info(`documentId: ${documentId}`);
   Logger.info(`url: ${url}`);
   Logger.info(`uuid: ${uuid}`);
