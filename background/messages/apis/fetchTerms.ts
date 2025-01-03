@@ -5,10 +5,6 @@ import { type AxiosResponse } from 'axios';
 
 export const fetchTerms = async (sendResponse: (response?: any) => void) => {
   // get document_id and uuid
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true
-  });
   const res = await sendMessage(true, {
     type: MessageType.TO_BROWSER,
     command: MessageToBrowserCommand.GET_DOCUMENT_IDS
