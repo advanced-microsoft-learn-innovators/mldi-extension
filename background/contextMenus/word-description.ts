@@ -1,5 +1,4 @@
-import { truncate } from 'fs';
-import { MessageContextMenuCommand, MessageType } from '~types';
+import { MessageToBrowserCommand, MessageType } from '~types';
 import { sendMessage } from '~utils';
 
 export const showWordDescriptionCard = (info) => {
@@ -13,14 +12,14 @@ export const showWordDescriptionCard = (info) => {
     // Todo: Define and use types or interfaces for the messages
     // 1. get position of selected text
     const rect = await sendMessage(true, {
-      type: MessageType.CONTEXT_MENU,
-      command: MessageContextMenuCommand.GET_RECT
+      type: MessageType.TO_BROWSER,
+      command: MessageToBrowserCommand.GET_RECT
     });
 
     // 2. show the card and the word (selected text)
     await sendMessage(true, {
-      type: MessageType.CONTEXT_MENU,
-      command: MessageContextMenuCommand.SHOW_CARD,
+      type: MessageType.TO_BROWSER,
+      command: MessageToBrowserCommand.SHOW_CARD,
       data: {
         word: selectedText,
         rect: rect
@@ -29,8 +28,8 @@ export const showWordDescriptionCard = (info) => {
 
     // 3. set timeout to hide card, 5000ms
     await sendMessage(true, {
-      type: MessageType.CONTEXT_MENU,
-      command: MessageContextMenuCommand.SET_TIMEOUT,
+      type: MessageType.TO_BROWSER,
+      command: MessageToBrowserCommand.SET_TIMEOUT,
       data: {
         time: 5000
       }

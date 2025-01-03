@@ -1,6 +1,7 @@
 import {
   MessageApiCommand,
   MessageRelayCommand,
+  MessageToBrowserCommand,
   MessageType,
   type Message
 } from 'types';
@@ -123,7 +124,7 @@ window.addEventListener('load', async () => {
   chrome.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
       switch (message.command) {
-        case 'getRect':
+        case MessageToBrowserCommand.GET_RECT:
           const selection = window.getSelection();
           const range = selection.getRangeAt(0);
           const rect = range.getBoundingClientRect();

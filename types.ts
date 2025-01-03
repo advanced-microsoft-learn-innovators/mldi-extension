@@ -8,13 +8,11 @@ export type Message = {
 export enum MessageType {
   API,
   RELAY,
-  CONTEXT_MENU,
   TO_BROWSER
 }
 
 export type MessageCommand =
   | MessageApiCommand
-  | MessageContextMenuCommand
   | MessageRelayCommand
   | MessageToBrowserCommand;
 
@@ -22,12 +20,6 @@ export enum MessageApiCommand {
   FETCH_SUMMARY,
   FETCH_TERMS,
   GET_IS_SHOW_DESCRIPTION
-}
-
-export enum MessageContextMenuCommand {
-  GET_RECT,
-  SHOW_CARD,
-  SET_TIMEOUT
 }
 
 export enum MessageRelayCommand {
@@ -38,7 +30,10 @@ export enum MessageRelayCommand {
 }
 
 export enum MessageToBrowserCommand {
+  GET_RECT,
   GET_DOCUMENT_IDS,
+  SHOW_CARD,
+  SET_TIMEOUT,
   FETCH_SUMMARY,
   FETCH_SECTION_SUMMARIES,
   FETCH_TERMS
