@@ -1,9 +1,8 @@
-import type { AxiosResponse } from 'axios';
-import axios from 'axios';
 import { storage } from 'background';
-import { send } from 'process';
-import type { Message } from '~types';
-import { getDocumentIds, Logger, sleep } from '~utils';
+import { MessageApiCommand, type Message } from '~types';
+import { Logger } from '~utils';
+import { fetchSummary } from './apis/fetchSummary';
+import { fetchTerms } from './apis/fetchTerms';
 
 const handleApi = (
   message: Message,
@@ -11,120 +10,19 @@ const handleApi = (
   sendResponse: (response?: any) => void
 ) => {
   switch (message.command) {
-    case 'fetchSummary':
+    case MessageApiCommand.FETCH_SUMMARY:
       // fetch summary
       (async () => {
-        // get document_id and uuid
-        const [tab] = await chrome.tabs.query({
-          active: true,
-          lastFocusedWindow: true
-        });
-        const res = await chrome.tabs.sendMessage(tab.id, {
-          type: 'getContentData',
-          command: 'getDucumentIds',
-          data: {}
-        });
-        const documentId = res.documentId;
-        const uuid = res.uuid;
-
-        // get url
-        const url = message.data.url;
-
-        // get heading level setting
-        const isSummaryHeadeingLevels = (await storage.get(
-          'isSummaryHeadeingLevels'
-        )) || { h2: false, h3: false, h4: false };
-
-        // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
-        Logger.info(`documentId: ${documentId}`);
-        Logger.info(`url: ${url}`);
-        Logger.info(`uuid: ${uuid}`);
-        Logger.info(
-          `isSummaryHeadeingLevels.h2: ${isSummaryHeadeingLevels['h2']}`
-        );
-        Logger.info(
-          `isSummaryHeadeingLevels.h3: ${isSummaryHeadeingLevels['h3']}`
-        );
-        Logger.info(
-          `isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`
-        );
-        const restApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`;
-        Logger.info(`restApiUrl: ${restApiUrl}`);
-        const sendResponse = async (
-          status: number,
-          mainSummary: string,
-          sectionSummaries: any
-        ) => {
-          await chrome.tabs.sendMessage(tab.id, {
-            type: 'response',
-            command: 'fetchSectionSummary',
-            data: {
-              status: status,
-              sectionSummaries: sectionSummaries
-            }
-          });
-          await chrome.tabs.sendMessage(tab.id, {
-            type: 'response',
-            command: 'fetchSummary',
-            data: {
-              status: status,
-              summary: mainSummary
-            }
-          });
-        };
-
-        try {
-          const response: AxiosResponse = await axios.get(restApiUrl);
-          const { data, status } = response;
-          Logger.info(`status: ${status}`);
-          let headingSummaries = {};
-          if (data?.headingSection.length > 0) {
-            // ensure data might be undefined
-            data.headingSection.forEach((section) => {
-              headingSummaries[section.id] = section.sectionSummary;
-            });
-
-            await sendResponse(status, data.mainSummary, headingSummaries);
-          }
-        } catch (error) {
-          Logger.error(`fetchSummary error: ${error}`);
-          await sendResponse(500, '', '');
-        }
-
-        Logger.info('fetchSummary response');
+        await fetchSummary(message);
       })();
-    case 'fetchWordList':
+      return;
+    case MessageApiCommand.FETCH_TERMS:
       // fetch word list
       (async () => {
-        const url = message.data.url;
-        // const response: AxiosResponse = await axios.get(
-        //   `http://localhost:3000/word-description/${url}`
-        // );
-        const response = ['Teams', 'Entra', 'チーム', 'チャネル', '多要素認証'];
-        sendResponse({
-          wordList: response
-        });
+        await fetchTerms(message, sendResponse);
       })();
       return;
-    case 'fetchWordDescription':
-      // fetch description of the word
-      (async () => {
-        const word = message.data.word;
-        const response = {
-          data: {
-            description: `I cannot describe ${word}.`,
-            tags: ['Teams', 'Microsoft365']
-          },
-          status: 200
-        };
-        await sleep(1000);
-        sendResponse({
-          description: response.data.description,
-          tags: response.data.tags
-        });
-      })();
-      return;
-    case 'getIsShowDescription':
+    case MessageApiCommand.GET_IS_SHOW_DESCRIPTION:
       (async () => {
         const isShowDescription = await storage.get('isShowDescription');
         Logger.info(`isShowDescription: ${isShowDescription}`);
