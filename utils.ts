@@ -25,7 +25,7 @@ export class Logger {
   }
 
   public static error(message: string) {
-    console.log(`[ERR] ${message}`);
+    console.error(`[ERR] ${message}`);
   }
 }
 
