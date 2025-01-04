@@ -52,6 +52,14 @@ export class Logger {
     const caller = Logger.getCaller();
     console.error(`[ERR] ${caller} ${message}`);
   }
+
+  public static debug(message: string) {
+    const caller = Logger.getCaller();
+    const isDebug = process.env.PLASMO_PUBLIC_IS_DEBUG === 'true' || false;
+    if (isDebug) {
+      console.log(`[DBG] ${caller} ${message}`);
+    }
+  }
 }
 
 /**

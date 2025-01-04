@@ -22,14 +22,14 @@ const fetchSummary = async (message: Message) => {
   )) || { h2: false, h3: false, h4: false };
 
   // cannot set summarySectionLevels parameter in "params", because cannot set same key multiple times
-  Logger.info(`documentId: ${documentId}`);
-  Logger.info(`url: ${url}`);
-  Logger.info(`uuid: ${uuid}`);
-  Logger.info(`isSummaryHeadeingLevels.h2: ${isSummaryHeadeingLevels['h2']}`);
-  Logger.info(`isSummaryHeadeingLevels.h3: ${isSummaryHeadeingLevels['h3']}`);
-  Logger.info(`isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`);
+  Logger.debug(`documentId: ${documentId}`);
+  Logger.debug(`url: ${url}`);
+  Logger.debug(`uuid: ${uuid}`);
+  Logger.debug(`isSummaryHeadeingLevels.h2: ${isSummaryHeadeingLevels['h2']}`);
+  Logger.debug(`isSummaryHeadeingLevels.h3: ${isSummaryHeadeingLevels['h3']}`);
+  Logger.debug(`isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`);
   const restApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`;
-  Logger.info(`restApiUrl: ${restApiUrl}`);
+  Logger.debug(`restApiUrl: ${restApiUrl}`);
 
   const sendResponse = async (
     status: number,
@@ -71,14 +71,14 @@ const fetchSummary = async (message: Message) => {
     if (error.response.status === 404) {
       // if 404, try create summary
       const restPostApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents`;
-      Logger.info(`restPostApiUrl: ${restPostApiUrl}`);
+      Logger.debug(`restPostApiUrl: ${restPostApiUrl}`);
       Logger.info('There is no summary. Create summary.');
       try {
         const response: AxiosResponse = await axios.post(restPostApiUrl, {
           url: url
         });
         const postStatus = response.status;
-        Logger.info(`Summary Creation request sent: ${postStatus}`);
+        Logger.debug(`Summary Creation request sent: ${postStatus}`);
         if (postStatus === 201) {
           // wait for summary to be created
           while (true) {
