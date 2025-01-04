@@ -18,6 +18,7 @@ const fetchTerms = async (
   Logger.info(`uuid: ${uuid}`);
 
   const url = message.data.url.split('#')[0];
+  Logger.info(`url: ${url}`);
 
   const restGetApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms/${uuid}?url=${url}`;
   Logger.info(`restGetApiUrl: ${restGetApiUrl}`);
