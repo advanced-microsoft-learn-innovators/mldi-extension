@@ -19,13 +19,46 @@ export const getDocumentIds = () => {
   return [documentId, uuid];
 };
 
+const LogCaller = () => {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value;
+    descriptor.value = (...args: any[]) => {
+      const error = new Error();
+    };
+  };
+};
+
 export class Logger {
+  private static getCaller() {
+    const error = new Error();
+    const stack = error.stack;
+    if (stack) {
+      const stackLines = stack.split('\n');
+      const callerLine = stackLines[3];
+      const callerFunction = callerLine.match(/at (\w+)/);
+      if (callerFunction && callerFunction[1]) {
+        return callerFunction[1];
+      }
+    }
+    return 'unknown';
+  }
+
   public static info(message: string) {
-    console.log(`[INF] ${message}`);
+    const caller = Logger.getCaller();
+    console.log(`[INF] ${caller} ${message}`);
   }
 
   public static error(message: string) {
-    console.error(`[ERR] ${message}`);
+    const caller = Logger.getCaller();
+    console.error(`[ERR] ${caller} ${message}`);
+  }
+
+  public static debug(message: string) {
+    const caller = Logger.getCaller();
+    const isDebug = process.env.PLASMO_PUBLIC_IS_DEBUG === 'true' || false;
+    if (isDebug) {
+      console.log(`[DBG] ${caller} ${message}`);
+    }
   }
 }
 

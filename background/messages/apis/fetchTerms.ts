@@ -14,20 +14,20 @@ const fetchTerms = async (
   });
   const documentId = res.documentId;
   const uuid = res.uuid;
-  Logger.info(`documentId: ${documentId}`);
-  Logger.info(`uuid: ${uuid}`);
+  Logger.debug(`documentId: ${documentId}`);
+  Logger.debug(`uuid: ${uuid}`);
 
   const url = message.data.url.split('#')[0];
-  Logger.info(`url: ${url}`);
+  Logger.debug(`url: ${url}`);
 
   const restGetApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms/${uuid}?url=${url}`;
-  Logger.info(`restGetApiUrl: ${restGetApiUrl}`);
+  Logger.debug(`restGetApiUrl: ${restGetApiUrl}`);
 
   try {
     // 1. try get terms
     const response: AxiosResponse = await axios.get(restGetApiUrl);
     const { data, status } = response;
-    Logger.info(`get status: ${status}`);
+    Logger.debug(`get status: ${status}`);
 
     // 2. if there is no error, send response
     sendResponse({
@@ -37,7 +37,7 @@ const fetchTerms = async (
     if (error.response.status === 404) {
       // 2. if 404, try create terms
       const restPostApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms`;
-      Logger.info(`restPostApiUrl: ${restPostApiUrl}`);
+      Logger.debug(`restPostApiUrl: ${restPostApiUrl}`);
       try {
         const response: AxiosResponse = await axios.post(restPostApiUrl, {
           url: url
