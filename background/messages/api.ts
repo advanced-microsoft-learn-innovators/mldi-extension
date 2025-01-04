@@ -1,8 +1,8 @@
 import { storage } from 'background';
 import { MessageApiCommand, type Message } from '~types';
 import { Logger } from '~utils';
-import { fetchSummary } from './apis/fetchSummary';
-import { fetchTerms } from './apis/fetchTerms';
+import fetchSummary from './apis/fetchSummary';
+import fetchTerms from './apis/fetchTerms';
 
 const handleApi = (
   message: Message,
@@ -19,7 +19,7 @@ const handleApi = (
     case MessageApiCommand.FETCH_TERMS:
       // fetch terms
       (async () => {
-        await fetchTerms(sendResponse);
+        await fetchTerms(message, sendResponse);
       })();
       return;
     case MessageApiCommand.GET_IS_SHOW_DESCRIPTION:

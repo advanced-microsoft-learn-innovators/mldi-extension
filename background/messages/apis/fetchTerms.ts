@@ -3,7 +3,10 @@ import { Logger, sendMessage, sleep } from '~utils';
 import axios from 'axios';
 import { type AxiosResponse } from 'axios';
 
-export const fetchTerms = async (sendResponse: (response?: any) => void) => {
+const fetchTerms = async (
+  message: Message,
+  sendResponse: (response?: any) => void
+) => {
   // get document_id and uuid
   const res = await sendMessage(true, {
     type: MessageType.TO_BROWSER,
@@ -14,7 +17,9 @@ export const fetchTerms = async (sendResponse: (response?: any) => void) => {
   Logger.info(`documentId: ${documentId}`);
   Logger.info(`uuid: ${uuid}`);
 
-  const restGetApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms/${uuid}`;
+  const url = message.data.url.split('#')[0];
+
+  const restGetApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms/${uuid}?url=${url}`;
   Logger.info(`restGetApiUrl: ${restGetApiUrl}`);
 
   try {
@@ -22,36 +27,61 @@ export const fetchTerms = async (sendResponse: (response?: any) => void) => {
     const response: AxiosResponse = await axios.get(restGetApiUrl);
     const { data, status } = response;
     Logger.info(`get status: ${status}`);
-    if (status === 404) {
-      // 2. if 404, try create terms
-      const restPostApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms`;
-      Logger.info(`restPostApiUrl: ${restPostApiUrl}`);
-      const response: AxiosResponse = await axios.post(restPostApiUrl, {
-        uuid: uuid
-      });
-      const postStatus = response.status;
-      if (postStatus === 201) {
-        // 3. wait for terms to be created
-        while (true) {
-          const response: AxiosResponse = await axios.get(restGetApiUrl);
-          const getStatus = response.status;
-          Logger.info(`get status: ${getStatus}`);
-          if (getStatus === 200) {
-            break;
-          }
-          await sleep(5000);
-        }
-      } else {
-        Logger.error(`create terms error: ${postStatus}`);
-        return;
-      }
-    }
 
-    // 4. send terms
+    // 2. if there is no error, send response
     sendResponse({
       wordList: response
     });
   } catch (error) {
-    Logger.error(`fetchWordList error: ${error}`);
+    if (error.response.status === 404) {
+      // 2. if 404, try create terms
+      const restPostApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/terms`;
+      Logger.info(`restPostApiUrl: ${restPostApiUrl}`);
+      try {
+        const response: AxiosResponse = await axios.post(restPostApiUrl, {
+          url: url
+        });
+        Logger.info(
+          `Terms creation request sent successfully.: ${response.status}`
+        );
+      } catch (error) {
+        if (error.response.status === 409) {
+          Logger.info(`Terms are already created.`);
+        } else {
+          Logger.error(`post terms creation request: ${error}`);
+          sendResponse({
+            wordList: []
+          });
+          return;
+        }
+      }
+
+      // 3. wait for terms to be created
+      while (true) {
+        try {
+          const response: AxiosResponse = await axios.get(restGetApiUrl);
+          if (response.status === 200) {
+            sendResponse({
+              wordList: response
+            });
+            break;
+          }
+        } catch (error) {
+          if (error.response.status === 404) {
+            Logger.info(`Terms are not created yet. Wait for 5 seconds.`);
+            await sleep(5000);
+            continue;
+          } else {
+            Logger.error(`fetch Terms error: ${error}`);
+            return;
+          }
+        }
+      }
+    } else {
+      Logger.error(`fetch Terms error: ${error}`);
+      return;
+    }
   }
 };
+
+export default fetchTerms;
