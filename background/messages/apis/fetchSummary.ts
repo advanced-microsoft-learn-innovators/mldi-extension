@@ -17,18 +17,18 @@ export const fetchSummary = async (message: Message) => {
   const url = message.data.url;
 
   // get heading level setting
-  const isSummaryHeadeingLevels = (await storage.get(
-    'isSummaryHeadeingLevels'
+  const isSummaryHeadingLevels = (await storage.get(
+    'isSummaryHeadingLevels'
   )) || { h2: false, h3: false, h4: false };
 
   // cannot set summarySectionLevels parameter in "params", because cannot set same key multiple times
   Logger.info(`documentId: ${documentId}`);
   Logger.info(`url: ${url}`);
   Logger.info(`uuid: ${uuid}`);
-  Logger.info(`isSummaryHeadeingLevels.h2: ${isSummaryHeadeingLevels['h2']}`);
-  Logger.info(`isSummaryHeadeingLevels.h3: ${isSummaryHeadeingLevels['h3']}`);
-  Logger.info(`isSummaryHeadeingLevels.h4: ${isSummaryHeadeingLevels['h4']}`);
-  const restApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`;
+  Logger.info(`isSummaryHeadingLevels.h2: ${isSummaryHeadingLevels['h2']}`);
+  Logger.info(`isSummaryHeadingLevels.h3: ${isSummaryHeadingLevels['h3']}`);
+  Logger.info(`isSummaryHeadingLevels.h4: ${isSummaryHeadingLevels['h4']}`);
+  const restApiUrl = `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=${url}&summarySectionLevels=${isSummaryHeadingLevels['h2']}&summarySectionLevels=${isSummaryHeadingLevels['h3']}&summarySectionLevels=${isSummaryHeadingLevels['h4']}`;
   Logger.info(`restApiUrl: ${restApiUrl}`);
   const sendResponse = async (
     status: number,

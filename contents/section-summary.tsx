@@ -49,7 +49,7 @@ const sectionSummary = ({ anchor }) => {
     h2: boolean;
     h3: boolean;
     h4: boolean;
-  }>('isSummaryHeadeingLevels', { h2: false, h3: false, h4: false });
+  }>('isSummaryHeadingLevels', { h2: false, h3: false, h4: false });
 
   useEffect(() => {
     if (!isShowSummary) return;
