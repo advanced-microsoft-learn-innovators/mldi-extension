@@ -1,8 +1,8 @@
-import type { AxiosResponse } from 'axios';
-import axios from 'axios';
 import { storage } from 'background';
-import type { Message } from '~types';
-import { getDocumentIds, Logger, sleep } from '~utils';
+import { MessageApiCommand, type Message } from '~types';
+import { Logger } from '~utils';
+import { fetchSummary } from './apis/fetchSummary';
+import { fetchTerms } from './apis/fetchTerms';
 
 const handleApi = (
   message: Message,
@@ -10,91 +10,19 @@ const handleApi = (
   sendResponse: (response?: any) => void
 ) => {
   switch (message.command) {
-    case 'fetchSummary':
+    case MessageApiCommand.FETCH_SUMMARY:
       // fetch summary
       (async () => {
-        // get document_id and uuid
-        const [tab] = await chrome.tabs.query({
-          active: true,
-          lastFocusedWindow: true
-        });
-        const res = await chrome.tabs.sendMessage(tab.id, {
-          type: 'getContentData',
-          command: 'getDucumentIds',
-          data: {}
-        });
-        const documentId = res.documentId;
-        const uuid = res.uuid;
-
-        // get url
-        const url = message.data.url;
-
-        // get heading level setting
-        const isSummaryHeadeingLevels = (await storage.get(
-          'isSummaryHeadeingLevels'
-        )) || { h2: false, h3: false, h4: false };
-
-        // cannot set summarySectionLevels parameter in "params", beacuse cannot set same key multiple times
-        const response: AxiosResponse = await axios.get(
-          `${process.env.PLASMO_PUBLIC_BACKEND_DOMAIN}/documents/${documentId}/summary-contents/${uuid}?url=https://learn.microsoft.com/ja-jp/deployedge/microsoft-edge-channels&summarySectionLevels=${isSummaryHeadeingLevels['h2']}&summarySectionLevels=${isSummaryHeadeingLevels['h3']}&summarySectionLevels=${isSummaryHeadeingLevels['h4']}`
-        );
-        const { data, status } = response;
-
-        let headingSummaries = {};
-        if (data?.headingSection.length > 0) {
-          // ensure data might be undefined
-          data.headingSection.forEach((section) => {
-            headingSummaries[section.id] = section.sectionSummary;
-          });
-        }
-
-        await chrome.tabs.sendMessage(tab.id, {
-          type: 'response',
-          command: 'fetchSectionSummary',
-          data: {
-            sectionSummaries: headingSummaries
-          }
-        });
-        await chrome.tabs.sendMessage(tab.id, {
-          type: 'response',
-          command: 'fetchSummary',
-          data: {
-            summary: data.mainSummary
-          }
-        });
-      })();
-    case 'fetchWordList':
-      // fetch word list
-      (async () => {
-        const url = message.data.url;
-        // const response: AxiosResponse = await axios.get(
-        //   `http://localhost:3000/word-description/${url}`
-        // );
-        const response = ['Teams', 'Entra', 'チーム', 'チャネル', '多要素認証'];
-        sendResponse({
-          wordList: response
-        });
+        await fetchSummary(message);
       })();
       return;
-    case 'fetchWordDescription':
-      // fetch description of the word
+    case MessageApiCommand.FETCH_TERMS:
+      // fetch terms
       (async () => {
-        const word = message.data.word;
-        const response = {
-          data: {
-            description: `I cannot describe ${word}.`,
-            tags: ['Teams', 'Microsoft365']
-          },
-          status: 200
-        };
-        await sleep(1000);
-        sendResponse({
-          description: response.data.description,
-          tags: response.data.tags
-        });
+        await fetchTerms(message, sendResponse);
       })();
       return;
-    case 'getIsShowDescription':
+    case MessageApiCommand.GET_IS_SHOW_DESCRIPTION:
       (async () => {
         const isShowDescription = await storage.get('isShowDescription');
         Logger.info(`isShowDescription: ${isShowDescription}`);

@@ -1,3 +1,5 @@
+import type { Message } from '~types';
+
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -26,3 +28,21 @@ export class Logger {
     console.log(`[ERR] ${message}`);
   }
 }
+
+/**
+ *
+ * @param isBackground: If you send message from background, set this to true
+ * @param message: Message
+ * @returns
+ */
+export const sendMessage = async (isBackground: boolean, message: Message) => {
+  if (isBackground) {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      lastFocusedWindow: true
+    });
+    return await chrome.tabs.sendMessage(tab.id, message);
+  } else {
+    return await chrome.runtime.sendMessage(message);
+  }
+};
