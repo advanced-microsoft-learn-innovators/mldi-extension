@@ -1,8 +1,8 @@
 import { storage } from 'background';
 import { MessageApiCommand, type Message } from '~types';
 import { Logger } from '~utils';
-import { fetchSummary } from './apis/fetchSummary';
-import { fetchTerms } from './apis/fetchTerms';
+import fetchSummary from './apis/fetchSummary';
+import fetchTerms from './apis/fetchTerms';
 
 const handleApi = (
   message: Message,
