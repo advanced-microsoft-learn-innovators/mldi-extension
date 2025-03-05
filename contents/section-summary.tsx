@@ -49,14 +49,15 @@ const sectionSummary = ({ anchor }) => {
     h2: boolean;
     h3: boolean;
     h4: boolean;
-  }>('isSummaryHeadeingLevels', { h2: false, h3: false, h4: false });
+  }>('isSummaryHeadingLevels', { h2: false, h3: false, h4: false });
 
   useEffect(() => {
     if (!isShowSummary) return;
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type !== 'response') return;
       if (message.command !== 'fetchSectionSummary') return;
-      setSummary(message.data.sectionSummaries[anchor.element.id]);
+      if (message.data.status === 500) setSummary('Failed to get summary.');
+      else setSummary(message.data.sectionSummaries[anchor.element.id]);
     });
   }, [isShowSummary]);
 

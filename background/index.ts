@@ -1,5 +1,5 @@
 import { showWordDescriptionCard } from './contextMenus/word-description';
-import type { Message } from '~types';
+import { MessageType, type Message } from '~types';
 import handleApi from './messages/api';
 import handleRelay from './messages/relay';
 import { Storage } from '@plasmohq/storage';
@@ -31,13 +31,14 @@ chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendResponse) => {
     Logger.info(`background: ${message.type}:${message.command}`);
     switch (message.type) {
-      case 'api':
+      case MessageType.API:
         handleApi(message, sender, sendResponse);
         return;
-      case 'relay':
+      case MessageType.RELAY:
         handleRelay(message);
         return;
-      case 'contextMenu':
+      case MessageType.TO_BROWSER:
+        Logger.info('background is not handle TO_BROWSER message');
         return;
       default:
         return;
